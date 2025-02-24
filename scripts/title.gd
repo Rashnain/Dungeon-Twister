@@ -5,5 +5,5 @@ extends Node2D
 
 
 func _on_play_button_pressed() -> void:
-	Game.nr_players = player_chooser.value
+	Game.nr_players = int(player_chooser.value)
 	get_tree().change_scene_to_file("res://scenes/game.tscn")

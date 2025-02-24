@@ -1,12 +1,19 @@
 extends Node2D
 
+
 @onready var stats : Label = %Stats
 
+
 func _ready() -> void:
-	var str = ""
+	Game.init_arrays()
+	update_stats()
+
+
+func update_stats():
+	var players_str = ""
 	for i in Game.nr_players:
-		str += "Player %d : %d coins\n" % [i+1, randi_range(10, 100)]
-	stats.text = str
+		players_str += "Player %d : %d coins\n" % [i+1, Game.players_money[i]]
+	stats.text = players_str
 
 
 func _on_back_button_pressed() -> void:
