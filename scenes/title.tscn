@@ -8,7 +8,7 @@ script = ExtResource("1_xhuiw")
 
 [node name="TitleImage" type="TextureRect" parent="."]
 offset_top = 56.0
-offset_right = 1280.0
+offset_right = 1300.0
 offset_bottom = 440.0
 texture = ExtResource("1_etx8q")
 expand_mode = 2
