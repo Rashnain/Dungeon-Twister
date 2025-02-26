@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://crnov8gflaict"
-path="res://.godot/imported/sphere.png-7e1f7abc296cdf459fd6b20549fd1af8.ctex"
+uid="uid://lmelp5q23e56"
+path="res://.godot/imported/4.png-585d772c827a9d95563f2f053e702dd7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pawns/sphere.png"
-dest_files=["res://.godot/imported/sphere.png-7e1f7abc296cdf459fd6b20549fd1af8.ctex"]
+source_file="res://assets/pawns/4.png"
+dest_files=["res://.godot/imported/4.png-585d772c827a9d95563f2f053e702dd7.ctex"]
 
 [params]
 

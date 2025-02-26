@@ -5,12 +5,16 @@ extends Node2D
 @onready var instructions : Label = %Instructions
 @onready var d4_button : Button = %Die4Button
 @onready var d6_button : Button = %Die6Button
+@onready var dungeon : TileMapLayer = $DungeonGrid
 
 var busy := false
 
 
 func _ready() -> void:
-	Game.init_arrays()
+	Game.init_game()
+	for pawn in Game.players_pawns:
+		pawn.position = dungeon.map_to_local(pawn.pos)
+		add_child(pawn)
 	update_stats()
 
 
