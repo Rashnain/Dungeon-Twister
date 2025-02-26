@@ -43,7 +43,11 @@ func _process(_delta: float) -> void:
 func update_stats() -> void:
 	var players_str = ""
 	for i in Game.nr_players:
-		players_str += "Player %d : %d coins\n" % [i+1, Game.players_money[i]]
+		players_str += "Player %d : %d coins" % [i+1, Game.players_money[i]]
+		players_str += " [Skip next turn] " if Game.players_skip_next_turn[i] else ""
+		players_str += " [Treasure boost] " if Game.players_has_treasure_boost[i] else ""
+		players_str += " [Cancel next trap] " if Game.players_can_cancel_traps[i] else ""
+		players_str += "\n"
 	stats.text = players_str
 
 
