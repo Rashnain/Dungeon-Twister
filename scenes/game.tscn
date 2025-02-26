@@ -51,10 +51,26 @@ sources/1 = SubResource("TileSetAtlasSource_2psh7")
 script = ExtResource("1_ldrhe")
 
 [node name="DungeonGrid" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray(0, 0, 6, 0, 3, 0, 1, 0, 3, 0, 1, 0, 0, 0)
+tile_map_data = PackedByteArray(0, 0, 6, 0, 3, 0, 1, 0, 3, 0, 1, 0, 0, 0, 7, 0, 3, 0, 1, 0, 0, 0, 2, 0, 0, 96, 8, 0, 3, 0, 1, 0, 0, 0, 2, 0, 0, 16)
 tile_set = SubResource("TileSet_ri8qo")
 
+[node name="ColorOverlay" type="ColorRect" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 1
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(1, 1, 1, 0.498039)
+
+[node name="TextureOverlay" type="TextureRect" parent="."]
+unique_name_in_owner = true
+visible = false
+z_index = 1
+offset_right = 100.0
+offset_bottom = 100.0
+
 [node name="Camera2D" type="Camera2D" parent="."]
+z_index = 1
 position = Vector2(650, 350)
 
 [node name="Stats" type="Label" parent="Camera2D"]

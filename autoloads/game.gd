@@ -52,16 +52,17 @@ func init_game() -> void:
 	for i in 10:
 		tile_stack.append(2) # Corner
 	for i in 5:
-		tile_stack.append(3) # One way
+		tile_stack.append(3) # Dead end
 	for i in 7:
 		tile_stack.append(4) # Three ways
 	# Traps
-	for i in range(5, 9):
-		for j in 5:
-			tile_stack.append(i) # 5 : demon | 6 : spikes | 7 : tunnel | 8 : goblin
+	for i in range(5, 22):
+		# 5-9 : demon | 10-14 : spikes | 15-19 : tunnel | 20-24 : goblin
+		tile_stack.append(i)
 	# Treasures
-	for i in 20:
-		tile_stack.append(9)
+	for i in 5:
+		for j in 4:
+			tile_stack.append(25+i)
 	tile_stack.shuffle()
 
 
