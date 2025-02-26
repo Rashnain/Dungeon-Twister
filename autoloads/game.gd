@@ -4,17 +4,17 @@ extends Node
 var nr_players: int
 var players_money: Array[int]
 var players_pawns: Array[Pawn]
-var players_cards: Array[Card]
-var players_tiles: Array[Tile]
+var players_cards: Array[Array]
+var players_tiles: Array[Array]
 var players_can_cancel_traps: Array[bool]
 var players_skip_next_turn: Array[bool]
 var players_has_treasure_boost: Array[bool]
 
-var tile_deck : Array[int]
-var card_deck : Array[int]
+var tile_stack : Array[int]
+var card_stack : Array[int]
 
 
-func init_arrays():
+func init_arrays() -> void:
 	# Players stats
 	players_money.clear()
 	players_can_cancel_traps.clear()
@@ -22,33 +22,47 @@ func init_arrays():
 	players_has_treasure_boost.clear()
 	for i in nr_players:
 		players_money.append(0)
+		players_cards.append([])
+		players_tiles.append([])
 		players_can_cancel_traps.append(false)
 		players_skip_next_turn.append(false)
 		players_has_treasure_boost.append(false)
 
 	# Cards
-	card_deck.clear()
+	card_stack.clear()
 	for i in 10:
 		for j in 3:
-			card_deck.append(i)
+			card_stack.append(i)
+	card_stack.shuffle()
 
 	# Tiles
-	tile_deck.clear()
+	tile_stack.clear()
 	# Empty tiles
 	for i in 5:
-		tile_deck.append(0)
+		tile_stack.append(0) # Four ways
 	for i in 10:
-		tile_deck.append(1)
+		tile_stack.append(1) # Corridor
 	for i in 10:
-		tile_deck.append(2)
+		tile_stack.append(2) # Corner
 	for i in 5:
-		tile_deck.append(3)
+		tile_stack.append(3) # One way
 	for i in 7:
-		tile_deck.append(4)
+		tile_stack.append(4) # Three ways
 	# Traps
 	for i in range(5, 9):
 		for j in 5:
-			tile_deck.append(i)
+			tile_stack.append(i) # 5 : demon | 6 : spikes | 7 : tunnel | 8 : goblin
 	# Treasures
 	for i in 20:
-		tile_deck.append(9)
+		tile_stack.append(9)
+	tile_stack.shuffle()
+
+
+func draw_card(player_index: int) -> void:
+	if not card_stack.is_empty():
+		players_cards[player_index].append(card_stack.pop_back())
+
+
+func draw_tile(player_index: int) -> void:
+	if not tile_stack.is_empty():
+		players_tiles[player_index].append(tile_stack.pop_back())

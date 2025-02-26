@@ -26,16 +26,37 @@ func _process(_delta: float) -> void:
 			await d6_button.button_up
 			d6_button.visible = false
 			var die_value := d6()
-			instructions.text += "Player %d got %d tile(s)" % [i+1, die_value]
+			match die_value:
+				1:
+					for j in 1:
+						Game.draw_card(i)
+					instructions.text += "They got 1 card"
+				2:
+					for j in 2:
+						Game.draw_card(i)
+					instructions.text += "They got 2 cards"
+				3:
+					for j in 2:
+						Game.draw_tile(i)
+					instructions.text += "They got 2 tiles"
+				4:
+					for j in 3:
+						Game.draw_tile(i)
+					instructions.text += "They got 3 tiles"
+				_:
+					for j in 1:
+						Game.draw_tile(i)
+					instructions.text += "They got 1 tile"
 			# Movement
 			d4_button.visible = true
 			await d4_button.button_up
 			d4_button.visible = false
 			die_value = d4()
 			instructions.text += " and %d move(s)" % [die_value]
-			# TODO add tiles to player (from the deck)
+			instructions.text += "\nCards : %s" % str(Game.players_cards[i])
+			instructions.text += "\nTiles : %s" % str(Game.players_tiles[i])
 			update_stats()
-			await get_tree().create_timer(1.5).timeout
+			await get_tree().create_timer(3.0).timeout
 
 	busy = false
 
