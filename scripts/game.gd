@@ -8,6 +8,7 @@ enum TileRotation {
 	ROTATE_270 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_V,
 }
 
+signal button_pressed
 
 @onready var dungeon : TileMapLayer = $DungeonGrid
 @onready var color_overlay : ColorRect = %ColorOverlay
@@ -16,9 +17,11 @@ enum TileRotation {
 @onready var instructions : Label = %Instructions
 @onready var d4_button : Button = %Die4Button
 @onready var d6_button : Button = %Die6Button
+@onready var card_button : Button = %CardButton
 
+var button_value: String
 var player_playing := -1
-var mode := 0
+var mode := 0 # TODO create an enum for the mode
 
 
 func _ready() -> void:
@@ -42,9 +45,9 @@ func _process(_delta: float) -> void:
 		if not Game.players_skip_next_turn[player_playing]:
 			# Tiles / cards
 			d6_button.visible = true
-			await d6_button.button_up
+			await button_pressed
 			d6_button.visible = false
-			var die_value := d6()
+			var die_value := randi_range(1, 6)
 			match die_value:
 				1:
 					for j in 1:
@@ -68,17 +71,16 @@ func _process(_delta: float) -> void:
 					instructions.text += "They got 1 tile"
 			# Movement
 			d4_button.visible = true
-			await d4_button.button_up
+			card_button.visible = true
+			await button_pressed
 			d4_button.visible = false
-			die_value = d4()
-			instructions.text += " and %d move(s)" % [die_value]
-			instructions.text += "\nCards : %s" % str(Game.players_cards[player_playing])
-			instructions.text += "\nTiles : %s" % str(Game.players_tiles[player_playing])
-			update_stats()
-			if len(Game.players_tiles[player_playing]) > 0:
-				mode = 4
-			else:
+			card_button.visible = false
+			if button_value == "d4":
+				die_value = randi_range(1, 4)
+				instructions.text += " and %d move(s)" % [die_value]
 				mode = 2
+			elif button_value == "card":
+				mode = 5
 
 	# Movement
 	if mode == 2:
@@ -108,6 +110,17 @@ func _process(_delta: float) -> void:
 		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
 		texture_overlay.texture = Tile.get_texture_from_id(Game.players_tiles[player_playing][0])
 		texture_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
+		# TODO tile rotation with R
+
+	#  Choosing a card
+	if mode == 5:
+		# TODO create buttons to choose the card
+		await button_pressed
+
+	#  Choosing a tile
+	if mode == 6:
+		# TODO create buttons to choose the tile
+		await button_pressed
 
 
 func update_stats() -> void:
@@ -121,13 +134,10 @@ func update_stats() -> void:
 	stats.text = players_str
 
 
+func _on_button_pressed(value: String) -> void:
+	button_value = value
+	button_pressed.emit()
+
+
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/title.tscn")
-
-
-func d4() -> int:
-	return randi_range(1, 4)
-
-
-func d6() -> int:
-	return randi_range(1, 6)
