@@ -92,6 +92,12 @@ func _process(_delta: float) -> void:
 		else:
 			color_overlay.color = Color("ffffff7f")
 		color_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
+		# TODO check that the path is valid
+		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+			var pawn = Game.players_pawns[player_playing]
+			pawn.position = dungeon.map_to_local(tile_mouse)
+			color_overlay.visible = false
+			mode = 0
 
 	# Choosing a player
 	if mode == 3:
