@@ -67,6 +67,31 @@ text = "Player 1 : X coins
 Player 2 : Y coins
 ..."
 
+[node name="Instructions" type="Label" parent="Camera2D"]
+unique_name_in_owner = true
+offset_left = -650.0
+offset_top = -155.0
+offset_right = -499.0
+offset_bottom = -132.0
+text = "It is Player X to play"
+
+[node name="Die4Button" type="Button" parent="Camera2D"]
+unique_name_in_owner = true
+visible = false
+offset_left = -650.0
+offset_right = -579.0
+offset_bottom = 31.0
+text = " Roll D4 "
+
+[node name="Die6Button" type="Button" parent="Camera2D"]
+unique_name_in_owner = true
+visible = false
+offset_left = -650.0
+offset_top = 44.0
+offset_right = -579.0
+offset_bottom = 75.0
+text = " Roll D6 "
+
 [node name="BackButton" type="Button" parent="Camera2D"]
 offset_left = -650.0
 offset_top = 319.0
