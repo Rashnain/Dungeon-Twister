@@ -123,7 +123,8 @@ func _process(_delta: float) -> void:
 		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
 		texture_overlay.texture = Tile.get_texture_from_id(Game.players_tiles[player_playing][0])
 		texture_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
-		# TODO tile rotation with R
+		if Input.is_action_just_pressed("rotate"):
+			texture_overlay.rotation_degrees += 90
 
 	#  Choosing a card
 	if mode == State.CHOOSING_CARD:

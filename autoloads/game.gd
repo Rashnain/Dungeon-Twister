@@ -27,6 +27,7 @@ func init_game() -> void:
 		players_money.append(0)
 		var pawn := Pawn.new()
 		pawn.texture = load("res://assets/pawns/%d.png" % i)
+		pawn.z_index = 2
 		pawn.pos = Vector2i(6, 3)
 		players_pawns.append(pawn)
 		players_cards.append([])
