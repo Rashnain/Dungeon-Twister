@@ -42,15 +42,15 @@ static func get_name_from_id(id: int) -> String:
 
 	match id % 5:
 		0:
-			file_name = prefix + "_four_ways"
+			file_name = prefix + "_corner"
 		1:
 			file_name = prefix + "_corridor"
 		2:
 			file_name = prefix + "_dead_end"
 		3:
-			file_name = prefix + "_three_ways"
+			file_name = prefix + "_four_ways"
 		4:
-			file_name = prefix + "_corner"
+			file_name = prefix + "_three_ways"
 
 	return file_name
 
