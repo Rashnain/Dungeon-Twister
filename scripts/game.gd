@@ -9,7 +9,7 @@ enum TileRotation {
 }
 
 enum State {
-	PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSING_CARD, CHOOSING_TILE
+	NEXT_PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSING_CARD, CHOOSING_TILE
 }
 
 signal button_pressed
@@ -17,6 +17,7 @@ signal button_pressed
 @onready var dungeon : TileMapLayer = $DungeonGrid
 @onready var color_overlay : ColorRect = %ColorOverlay
 @onready var texture_overlay : TextureRect = %TextureOverlay
+@onready var camera : Camera2D = $Camera2D
 @onready var stats : Label = %Stats
 @onready var instructions : Label = %Instructions
 @onready var d4_button : Button = %Die4Button
@@ -25,7 +26,7 @@ signal button_pressed
 
 var button_value: String
 var player_playing := -1
-var mode := State.PLAYER
+var mode := State.NEXT_PLAYER
 
 
 func _ready() -> void:
@@ -37,9 +38,9 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if mode == State.DICE: return
+	if mode == State.DICE or mode == State.CHOOSING_CARD or mode == State.CHOOSING_TILE: return
 
-	if mode == State.PLAYER:
+	if mode == State.NEXT_PLAYER:
 		player_playing = (player_playing + 1) % Game.nr_players
 		mode = State.DICE
 
@@ -75,7 +76,8 @@ func _process(_delta: float) -> void:
 					instructions.text += "They got 1 tile"
 			# Movement
 			d4_button.visible = true
-			card_button.visible = true
+			if len(Game.players_cards[player_playing]) > 0:
+				card_button.visible = true
 			await button_pressed
 			d4_button.visible = false
 			card_button.visible = false
@@ -87,6 +89,7 @@ func _process(_delta: float) -> void:
 				else:
 					mode = State.MOVEMENT
 			elif button_value == "card":
+				Card.create_cards_buttons(player_playing, camera, self)
 				mode = State.CHOOSING_CARD
 
 	# Movement
@@ -104,7 +107,7 @@ func _process(_delta: float) -> void:
 			var pawn = Game.players_pawns[player_playing]
 			pawn.position = dungeon.map_to_local(tile_mouse)
 			color_overlay.visible = false
-			mode = State.PLAYER
+			mode = State.NEXT_PLAYER
 
 	# Choosing a player
 	if mode == State.CHOOSING_PLAYER:
@@ -128,8 +131,32 @@ func _process(_delta: float) -> void:
 
 	#  Choosing a card
 	if mode == State.CHOOSING_CARD:
-		# TODO create buttons to choose the card
 		await button_pressed
+		var card_id = Game.players_cards[player_playing][int(button_value)]
+		match card_id:
+			0:
+				print("TODO")
+			1:
+				print("TODO")
+			2:
+				print("TODO")
+			3:
+				print("TODO")
+			4:
+				print("TODO")
+			5:
+				print("TODO")
+			6:
+				print("TODO")
+			7:
+				print("TODO")
+			8:
+				print("TODO")
+			9:
+				print("TODO")
+		Game.players_cards[player_playing].remove_at(int(button_value))
+		Card.remove_cards_buttons(camera)
+		mode = State.NEXT_PLAYER
 
 	#  Choosing a tile
 	if mode == State.CHOOSING_TILE:
