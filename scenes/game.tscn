@@ -45,6 +45,8 @@ texture_region_size = Vector2i(100, 100)
 
 [sub_resource type="TileSet" id="TileSet_ri8qo"]
 tile_size = Vector2i(100, 100)
+custom_data_layer_0/name = "real_id"
+custom_data_layer_0/type = 0
 sources/1 = SubResource("TileSetAtlasSource_2psh7")
 
 [node name="Game" type="Node2D"]

@@ -4,25 +4,25 @@ class_name Card extends Sprite2D
 static var node2d: Node2D
 
 
-static func create_cards_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
+static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
 	node2d = Node2D.new()
 	camera.add_child(node2d)
 	var x := -645
 	for i in len(Game.players_cards[id]):
 		var card_id = Game.players_cards[id][i]
 		var card = TextureButton.new()
-		card.texture_normal = load("res://assets/cards/%s.png" % [get_card_name_from_id(card_id)])
+		card.texture_normal = load("res://assets/cards/%s.png" % [get_name_from_id(card_id)])
 		card.position = Vector2(x, -87)
 		node2d.add_child(card)
 		x += 105
 		card.pressed.connect(game._on_button_pressed.bind("%d" % i))
 
 
-static func remove_cards_buttons(camera: Camera2D) -> void :
+static func remove_buttons() -> void :
 	node2d.queue_free()
 
 
-static func get_card_name_from_id(id: int) -> String:
+static func get_name_from_id(id: int) -> String:
 	match id:
 		0:
 			return "switch"

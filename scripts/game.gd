@@ -24,7 +24,7 @@ signal button_pressed
 @onready var d6_button : Button = %Die6Button
 @onready var card_button : Button = %CardButton
 
-var button_value: String
+var button_value
 var player_playing := -1
 var mode := State.NEXT_PLAYER
 
@@ -81,15 +81,16 @@ func _process(_delta: float) -> void:
 			await button_pressed
 			d4_button.visible = false
 			card_button.visible = false
-			if button_value == "d4":
+			if str(button_value) == "d4":
 				die_value = randi_range(1, 4)
 				instructions.text += " and %d move(s)" % [die_value]
 				if len(Game.players_tiles[player_playing]) > 0:
-					mode = State.PLACING_TILE
+					Tile.create_buttons(player_playing, camera, self)
+					mode = State.CHOOSING_TILE
 				else:
 					mode = State.MOVEMENT
-			elif button_value == "card":
-				Card.create_cards_buttons(player_playing, camera, self)
+			elif str(button_value) == "card":
+				Card.create_buttons(player_playing, camera, self)
 				mode = State.CHOOSING_CARD
 
 	# Movement
@@ -103,7 +104,10 @@ func _process(_delta: float) -> void:
 			color_overlay.color = Color("ffffff7f")
 		color_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
 		# TODO check that the path is valid
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		# TODO reveal tile if unknown
+		# TODO move more than one time
+		# TODO tile effect
+		if Input.is_action_just_pressed("left_click"):
 			var pawn = Game.players_pawns[player_playing]
 			pawn.position = dungeon.map_to_local(tile_mouse)
 			color_overlay.visible = false
@@ -124,44 +128,44 @@ func _process(_delta: float) -> void:
 	if mode == State.PLACING_TILE:
 		texture_overlay.visible = true
 		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
-		texture_overlay.texture = Tile.get_texture_from_id(Game.players_tiles[player_playing][0])
+		var tile_id = Game.players_tiles[player_playing][int(button_value)]
+		var tile_name := Tile.get_name_from_id(tile_id)
+		texture_overlay.texture = load("res://assets/tiles/%s.png" % tile_name)
 		texture_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
 		if Input.is_action_just_pressed("rotate"):
 			texture_overlay.rotation_degrees += 90
+		if Input.is_action_just_pressed("left_click"):
+			match int(texture_overlay.rotation_degrees) % 360:
+				0:
+					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_0)
+				90:
+					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_90)
+				180:
+					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_180)
+				270:
+					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_270)
+			dungeon.get_cell_tile_data(tile_mouse).set_custom_data("real_id", tile_id)
+			Game.players_tiles[player_playing].remove_at(int(button_value))
+			texture_overlay.visible = false
+			mode = State.MOVEMENT
 
 	#  Choosing a card
 	if mode == State.CHOOSING_CARD:
 		await button_pressed
 		var card_id = Game.players_cards[player_playing][int(button_value)]
 		match card_id:
-			0:
+			_:
 				print("TODO")
-			1:
-				print("TODO")
-			2:
-				print("TODO")
-			3:
-				print("TODO")
-			4:
-				print("TODO")
-			5:
-				print("TODO")
-			6:
-				print("TODO")
-			7:
-				print("TODO")
-			8:
-				print("TODO")
-			9:
-				print("TODO")
+				# TODO card effects
 		Game.players_cards[player_playing].remove_at(int(button_value))
-		Card.remove_cards_buttons(camera)
+		Card.remove_buttons()
 		mode = State.NEXT_PLAYER
 
 	#  Choosing a tile
 	if mode == State.CHOOSING_TILE:
-		# TODO create buttons to choose the tile
 		await button_pressed
+		Tile.remove_buttons()
+		mode = State.PLACING_TILE
 
 
 func update_stats() -> void:
