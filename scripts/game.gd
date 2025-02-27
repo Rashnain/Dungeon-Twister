@@ -8,6 +8,10 @@ enum TileRotation {
 	ROTATE_270 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_V,
 }
 
+enum State {
+	PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSING_CARD, CHOOSING_TILE
+}
+
 signal button_pressed
 
 @onready var dungeon : TileMapLayer = $DungeonGrid
@@ -21,7 +25,7 @@ signal button_pressed
 
 var button_value: String
 var player_playing := -1
-var mode := 0 # TODO create an enum for the mode
+var mode := State.PLAYER
 
 
 func _ready() -> void:
@@ -33,14 +37,14 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if mode == 1: return
+	if mode == State.DICE: return
 
-	if mode == 0:
+	if mode == State.PLAYER:
 		player_playing = (player_playing + 1) % Game.nr_players
-		mode = 1
+		mode = State.DICE
 
 	# Dice rolling
-	if mode == 1:
+	if mode == State.DICE:
 		instructions.text = "It is Player %d's turn\n" % [player_playing+1]
 		if not Game.players_skip_next_turn[player_playing]:
 			# Tiles / cards
@@ -78,12 +82,15 @@ func _process(_delta: float) -> void:
 			if button_value == "d4":
 				die_value = randi_range(1, 4)
 				instructions.text += " and %d move(s)" % [die_value]
-				mode = 2
+				if len(Game.players_tiles[player_playing]) > 0:
+					mode = State.PLACING_TILE
+				else:
+					mode = State.MOVEMENT
 			elif button_value == "card":
-				mode = 5
+				mode = State.CHOOSING_CARD
 
 	# Movement
-	if mode == 2:
+	if mode == State.MOVEMENT:
 		color_overlay.visible = true
 		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
 		var data = dungeon.get_cell_tile_data(tile_mouse)
@@ -97,10 +104,10 @@ func _process(_delta: float) -> void:
 			var pawn = Game.players_pawns[player_playing]
 			pawn.position = dungeon.map_to_local(tile_mouse)
 			color_overlay.visible = false
-			mode = 0
+			mode = State.PLAYER
 
 	# Choosing a player
-	if mode == 3:
+	if mode == State.CHOOSING_PLAYER:
 		color_overlay.visible = true
 		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
 		for pawn in Game.players_pawns:
@@ -111,7 +118,7 @@ func _process(_delta: float) -> void:
 		color_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	#  Placing a tile
-	if mode == 4:
+	if mode == State.PLACING_TILE:
 		texture_overlay.visible = true
 		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
 		texture_overlay.texture = Tile.get_texture_from_id(Game.players_tiles[player_playing][0])
@@ -119,12 +126,12 @@ func _process(_delta: float) -> void:
 		# TODO tile rotation with R
 
 	#  Choosing a card
-	if mode == 5:
+	if mode == State.CHOOSING_CARD:
 		# TODO create buttons to choose the card
 		await button_pressed
 
 	#  Choosing a tile
-	if mode == 6:
+	if mode == State.CHOOSING_TILE:
 		# TODO create buttons to choose the tile
 		await button_pressed
 
