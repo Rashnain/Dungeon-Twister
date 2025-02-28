@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://qu68nyon88cs"
-path="res://.godot/imported/3.png-bbe57b19aa042c0412b9f1eb39524986.ctex"
+uid="uid://cqkhjs2nbl0mu"
+path="res://.godot/imported/cube.png-55b7912dfca940b9ef1a0c87aa28e79b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pawns/3.png"
-dest_files=["res://.godot/imported/3.png-bbe57b19aa042c0412b9f1eb39524986.ctex"]
+source_file="res://assets/pawns/cube.png"
+dest_files=["res://.godot/imported/cube.png-55b7912dfca940b9ef1a0c87aa28e79b.ctex"]
 
 [params]
 

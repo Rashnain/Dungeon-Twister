@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b6lec7a11fu38"
-path="res://.godot/imported/2.png-1be81bfc434bef503f405fef4b20f283.ctex"
+uid="uid://qu68nyon88cs"
+path="res://.godot/imported/pyramide.png-c569abecf5650e9f5ecba24c2b46cadc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pawns/2.png"
-dest_files=["res://.godot/imported/2.png-1be81bfc434bef503f405fef4b20f283.ctex"]
+source_file="res://assets/pawns/pyramide.png"
+dest_files=["res://.godot/imported/pyramide.png-c569abecf5650e9f5ecba24c2b46cadc.ctex"]
 
 [params]
 

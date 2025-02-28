@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dt3rfqosi6tr8"
-path="res://.godot/imported/0.png-9584dd966f8eae5b41f4f8daae4dee7f.ctex"
+uid="uid://dddd0jf73i75s"
+path="res://.godot/imported/uwu.png-cc7a42af9a1aaa088761202413c3a504.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/pawns/0.png"
-dest_files=["res://.godot/imported/0.png-9584dd966f8eae5b41f4f8daae4dee7f.ctex"]
+source_file="res://assets/pawns/uwu.png"
+dest_files=["res://.godot/imported/uwu.png-cc7a42af9a1aaa088761202413c3a504.ctex"]
 
 [params]
 
