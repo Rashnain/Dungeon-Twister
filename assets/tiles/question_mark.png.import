@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bbfxqgn1xkqs4"
-path="res://.godot/imported/tunnel_four_ways.png-8bae851f9e99eb449b515c8824c27aef.ctex"
+uid="uid://cpkiiug2sc0pp"
+path="res://.godot/imported/question_mark.png-b3ac64753ad6976683b6dc99c0c1bdfb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/tunnel_four_ways.png"
-dest_files=["res://.godot/imported/tunnel_four_ways.png-8bae851f9e99eb449b515c8824c27aef.ctex"]
+source_file="res://assets/tiles/question_mark.png"
+dest_files=["res://.godot/imported/question_mark.png-b3ac64753ad6976683b6dc99c0c1bdfb.ctex"]
 
 [params]
 

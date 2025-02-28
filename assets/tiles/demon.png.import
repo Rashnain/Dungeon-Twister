@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7bl1ws8whoqs"
-path="res://.godot/imported/unknown_corner.png-fe9e2a05bd69b45841535eef9a40e1fd.ctex"
+uid="uid://b0p0rsolapxni"
+path="res://.godot/imported/demon.png-41f7c5852aaed6b6255e05e23221dcb0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/unknown_corner.png"
-dest_files=["res://.godot/imported/unknown_corner.png-fe9e2a05bd69b45841535eef9a40e1fd.ctex"]
+source_file="res://assets/tiles/demon.png"
+dest_files=["res://.godot/imported/demon.png-41f7c5852aaed6b6255e05e23221dcb0.ctex"]
 
 [params]
 

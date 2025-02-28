@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cvpwccwqpidvr"
-path="res://.godot/imported/unknown_corridor.png-c7078849fa6485f9f84e10c99f20f80f.ctex"
+uid="uid://id62dq2higml"
+path="res://.godot/imported/treasure.png-a4adf4ee1be900904730c265a56f252b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/unknown_corridor.png"
-dest_files=["res://.godot/imported/unknown_corridor.png-c7078849fa6485f9f84e10c99f20f80f.ctex"]
+source_file="res://assets/tiles/treasure.png"
+dest_files=["res://.godot/imported/treasure.png-a4adf4ee1be900904730c265a56f252b.ctex"]
 
 [params]
 

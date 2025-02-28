@@ -14,9 +14,11 @@ enum State {
 
 signal button_pressed
 
-@onready var dungeon : TileMapLayer = $DungeonGrid
+@onready var dungeon_back : TileMapLayer = $DungeonGridBack
+@onready var dungeon_front : TileMapLayer = $DungeonGridFront
 @onready var color_overlay : ColorRect = %ColorOverlay
-@onready var texture_overlay : TextureRect = %TextureOverlay
+@onready var texture_overlay_back : TextureRect = %TextureOverlayBack
+@onready var texture_overlay_front : TextureRect = %TextureOverlayFront
 @onready var camera : Camera2D = $Camera2D
 @onready var stats : Label = %Stats
 @onready var instructions : Label = %Instructions
@@ -32,7 +34,7 @@ var mode := State.NEXT_PLAYER
 func _ready() -> void:
 	Game.init_game()
 	for pawn in Game.players_pawns:
-		pawn.position = dungeon.map_to_local(pawn.pos)
+		pawn.position = dungeon_back.map_to_local(pawn.pos)
 		add_child(pawn)
 	update_stats()
 
@@ -96,57 +98,61 @@ func _process(_delta: float) -> void:
 	# Movement
 	if mode == State.MOVEMENT:
 		color_overlay.visible = true
-		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
-		var data = dungeon.get_cell_tile_data(tile_mouse)
+		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
+		var data = dungeon_back.get_cell_tile_data(tile_mouse)
 		if data:
 			color_overlay.color = Color("00ff007f")
 		else:
 			color_overlay.color = Color("ffffff7f")
-		color_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
+		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 		# TODO check that the path is valid
 		# TODO reveal tile if unknown
 		# TODO move more than one time
 		# TODO tile effect
 		if Input.is_action_just_pressed("left_click"):
 			var pawn = Game.players_pawns[player_playing]
-			pawn.position = dungeon.map_to_local(tile_mouse)
+			pawn.position = dungeon_back.map_to_local(tile_mouse)
 			color_overlay.visible = false
 			mode = State.NEXT_PLAYER
 
 	# Choosing a player
 	if mode == State.CHOOSING_PLAYER:
 		color_overlay.visible = true
-		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
+		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		for pawn in Game.players_pawns:
 			if pawn.pos == tile_mouse:
 				color_overlay.color = Color("00ff007f")
 			else:
 				color_overlay.color = Color("ffffff7f")
-		color_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
+		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	#  Placing a tile
 	if mode == State.PLACING_TILE:
-		texture_overlay.visible = true
-		var tile_mouse = dungeon.local_to_map(dungeon.get_local_mouse_position())
+		texture_overlay_back.visible = true
+		texture_overlay_front.visible = true
+		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		var tile_id = Game.players_tiles[player_playing][int(button_value)]
-		var tile_name := Tile.get_name_from_id(tile_id)
-		texture_overlay.texture = load("res://assets/tiles/%s.png" % tile_name)
-		texture_overlay.position = dungeon.map_to_local(tile_mouse) - Vector2(50, 50)
+		texture_overlay_back.texture = load("res://assets/tiles/%s.png" % [Tile.get_background_from_id(tile_id)])
+		texture_overlay_front.texture = load("res://assets/tiles/%s.png" % [Tile.get_foreground_from_id(tile_id % 5)])
+		texture_overlay_back.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
+		texture_overlay_front.position = texture_overlay_back.position
 		if Input.is_action_just_pressed("rotate"):
-			texture_overlay.rotation_degrees += 90
+			texture_overlay_back.rotation_degrees += 90
 		if Input.is_action_just_pressed("left_click"):
-			match int(texture_overlay.rotation_degrees) % 360:
+			match int(texture_overlay_back.rotation_degrees) % 360:
 				0:
-					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_0)
+					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_0)
 				90:
-					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_90)
+					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_90)
 				180:
-					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_180)
+					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_180)
 				270:
-					dungeon.set_cell(tile_mouse, 1, Tile.get_unknown_atlas_coord_from_id(tile_id), TileRotation.ROTATE_270)
-			dungeon.get_cell_tile_data(tile_mouse).set_custom_data("real_id", tile_id)
+					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_270)
+			dungeon_front.set_cell(tile_mouse, 10, Vector2i(0, 0))
+			dungeon_front.get_cell_tile_data(tile_mouse).set_custom_data("real_id", tile_id)
 			Game.players_tiles[player_playing].remove_at(int(button_value))
-			texture_overlay.visible = false
+			texture_overlay_back.visible = false
+			texture_overlay_front.visible = false
 			mode = State.MOVEMENT
 
 	#  Choosing a card

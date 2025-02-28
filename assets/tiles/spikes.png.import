@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://baph8t5sihih1"
-path="res://.godot/imported/demon_corner.png-1fab70782f809cbb635728bff835e64d.ctex"
+uid="uid://jjvrcck1e1su"
+path="res://.godot/imported/spikes.png-5700fcff724bbfc3218a8674738b9bc4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/demon_corner.png"
-dest_files=["res://.godot/imported/demon_corner.png-1fab70782f809cbb635728bff835e64d.ctex"]
+source_file="res://assets/tiles/spikes.png"
+dest_files=["res://.godot/imported/spikes.png-5700fcff724bbfc3218a8674738b9bc4.ctex"]
 
 [params]
 

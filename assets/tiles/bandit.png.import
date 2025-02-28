@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bdhfeg6dp2jlj"
-path="res://.godot/imported/tunnel_dead_end.png-8a5e8ba374b6e4d5a9a4fb044bf7ea35.ctex"
+uid="uid://dkalisbrswr5e"
+path="res://.godot/imported/bandit.png-de2fa04463fb1467f832c48f5f1d26dc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/tunnel_dead_end.png"
-dest_files=["res://.godot/imported/tunnel_dead_end.png-8a5e8ba374b6e4d5a9a4fb044bf7ea35.ctex"]
+source_file="res://assets/tiles/bandit.png"
+dest_files=["res://.godot/imported/bandit.png-de2fa04463fb1467f832c48f5f1d26dc.ctex"]
 
 [params]
 

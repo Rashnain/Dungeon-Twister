@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c8uwsp60a2842"
-path="res://.godot/imported/tunnel_corridor.png-a912b7912d3d11f21481812b155395e7.ctex"
+uid="uid://dqa3nqdihqx35"
+path="res://.godot/imported/monster.png-7be96873964861515f74fcd7b7b7ee89.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/tunnel_corridor.png"
-dest_files=["res://.godot/imported/tunnel_corridor.png-a912b7912d3d11f21481812b155395e7.ctex"]
+source_file="res://assets/tiles/monster.png"
+dest_files=["res://.godot/imported/monster.png-7be96873964861515f74fcd7b7b7ee89.ctex"]
 
 [params]
 

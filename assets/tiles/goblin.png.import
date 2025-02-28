@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dp1xymo8nin5f"
-path="res://.godot/imported/treasure_three_ways.png-2be196b4854c2dba780dfb21d3ee7ee7.ctex"
+uid="uid://c534a48dhhtbg"
+path="res://.godot/imported/goblin.png-6f6a54cc9d93637bba68ad82041b058c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/treasure_three_ways.png"
-dest_files=["res://.godot/imported/treasure_three_ways.png-2be196b4854c2dba780dfb21d3ee7ee7.ctex"]
+source_file="res://assets/tiles/goblin.png"
+dest_files=["res://.godot/imported/goblin.png-6f6a54cc9d93637bba68ad82041b058c.ctex"]
 
 [params]
 

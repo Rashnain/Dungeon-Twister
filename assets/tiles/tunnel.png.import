@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dxq5vhu5pt3tv"
-path="res://.godot/imported/goblin_four_ways.png-ea58da0495fdcd441f1ece65d07f37c2.ctex"
+uid="uid://cn7spl0xxxrqc"
+path="res://.godot/imported/tunnel.png-5f28bcbe6bd16774f5f3c8b76afb3cb4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/tiles/goblin_four_ways.png"
-dest_files=["res://.godot/imported/goblin_four_ways.png-ea58da0495fdcd441f1ece65d07f37c2.ctex"]
+source_file="res://assets/tiles/tunnel.png"
+dest_files=["res://.godot/imported/tunnel.png-5f28bcbe6bd16774f5f3c8b76afb3cb4.ctex"]
 
 [params]
 
