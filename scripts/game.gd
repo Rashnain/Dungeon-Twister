@@ -25,6 +25,8 @@ signal button_pressed
 @onready var d4_button : Button = %Die4Button
 @onready var d6_button : Button = %Die6Button
 @onready var card_button : Button = %CardButton
+@onready var tile_stack_label : Label = %TileStack/Label
+@onready var card_stack_label : Label = %CardStack/Label
 
 var button_value
 var player_playing := -1
@@ -33,6 +35,8 @@ var mode := State.NEXT_PLAYER
 
 func _ready() -> void:
 	Game.init_game()
+	tile_stack_label.text = "%s tiles" % len(Game.tile_stack)
+	card_stack_label.text = "%s cards" % len(Game.card_stack)
 	for pawn in Game.players_pawns:
 		pawn.position = dungeon_back.map_to_local(Vector2i(6, 3))
 		add_child(pawn)
@@ -76,6 +80,14 @@ func _process(_delta: float) -> void:
 					for j in 1:
 						Game.draw_tile(player_playing)
 					instructions.text += "They got 1 tile"
+			if len(Game.tile_stack) > 0:
+				tile_stack_label.text = "%s tiles" % len(Game.tile_stack)
+			else:
+				tile_stack_label.text = "1 tile"
+			if len(Game.card_stack) > 0:
+				card_stack_label.text = "%s cards" % len(Game.card_stack)
+			else:
+				card_stack_label.text = "1 card"
 			# Movement
 			d4_button.visible = true
 			if len(Game.players_cards[player_playing]) > 0:

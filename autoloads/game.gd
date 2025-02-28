@@ -27,7 +27,6 @@ func init_game() -> void:
 		players_money.append(0)
 		var pawn := Sprite2D.new()
 		pawn.texture = load("res://assets/pawns/%s.png" % Pawn.get_name_from_id(i))
-		pawn.z_index = 2
 		players_pawns.append(pawn)
 		players_cards.append([])
 		players_tiles.append([])

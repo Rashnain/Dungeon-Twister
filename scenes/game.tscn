@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://c43pfmnt1csbv"]
+[gd_scene load_steps=27 format=3 uid="uid://c43pfmnt1csbv"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_ldrhe"]
 [ext_resource type="Texture2D" uid="uid://b1uajpwrx8hk6" path="res://assets/tiles/empty_corridor.png" id="3_dcqtx"]
@@ -12,6 +12,8 @@
 [ext_resource type="Texture2D" uid="uid://cn7spl0xxxrqc" path="res://assets/tiles/tunnel.png" id="10_3kc6e"]
 [ext_resource type="Texture2D" uid="uid://c534a48dhhtbg" path="res://assets/tiles/goblin.png" id="11_ic0pr"]
 [ext_resource type="Texture2D" uid="uid://id62dq2higml" path="res://assets/tiles/treasure.png" id="12_kbvym"]
+[ext_resource type="Texture2D" uid="uid://b8n2tthybm8k1" path="res://assets/cards/stack.png" id="13_tarp1"]
+[ext_resource type="Texture2D" uid="uid://cujtgay0sq7br" path="res://assets/tiles/stack.png" id="14_34bmf"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0r761"]
 texture = ExtResource("5_gdwn0")
@@ -97,7 +99,6 @@ tile_set = SubResource("TileSet_ri8qo")
 
 [node name="TextureOverlayBack" type="TextureRect" parent="."]
 unique_name_in_owner = true
-z_index = 1
 offset_right = 100.0
 offset_bottom = 100.0
 pivot_offset = Vector2(50, 50)
@@ -105,7 +106,6 @@ pivot_offset = Vector2(50, 50)
 [node name="TextureOverlayFront" type="TextureRect" parent="."]
 unique_name_in_owner = true
 visible = false
-z_index = 1
 offset_right = 100.0
 offset_bottom = 100.0
 pivot_offset = Vector2(50, 50)
@@ -113,7 +113,6 @@ pivot_offset = Vector2(50, 50)
 [node name="ColorOverlay" type="ColorRect" parent="."]
 unique_name_in_owner = true
 visible = false
-z_index = 1
 offset_right = 100.0
 offset_bottom = 100.0
 pivot_offset = Vector2(50, 50)
@@ -171,6 +170,40 @@ offset_top = 319.0
 offset_right = -596.0
 offset_bottom = 350.0
 text = " Back "
+
+[node name="CardStack" type="TextureRect" parent="Camera2D"]
+unique_name_in_owner = true
+offset_left = 291.0
+offset_top = -338.0
+offset_right = 505.0
+offset_bottom = -124.0
+texture = ExtResource("13_tarp1")
+expand_mode = 2
+stretch_mode = 4
+
+[node name="Label" type="Label" parent="Camera2D/CardStack"]
+layout_mode = 0
+offset_left = 51.0
+offset_top = 185.0
+offset_right = 117.0
+offset_bottom = 208.0
+text = "XX cards"
+
+[node name="TileStack" type="TextureRect" parent="Camera2D"]
+unique_name_in_owner = true
+offset_left = 411.0
+offset_top = -350.0
+offset_right = 650.0
+offset_bottom = -108.0
+texture = ExtResource("14_34bmf")
+
+[node name="Label" type="Label" parent="Camera2D/TileStack"]
+layout_mode = 0
+offset_left = 91.0
+offset_top = 197.0
+offset_right = 148.0
+offset_bottom = 220.0
+text = "XX tiles"
 
 [connection signal="pressed" from="Camera2D/Die4Button" to="." method="_on_button_pressed" binds= ["d4"]]
 [connection signal="pressed" from="Camera2D/Die6Button" to="." method="_on_button_pressed" binds= ["d6"]]
