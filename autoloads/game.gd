@@ -3,7 +3,7 @@ extends Node
 
 var nr_players: int
 var players_money: Array[int]
-var players_pawns: Array[Pawn]
+var players_pawns: Array[Sprite2D]
 var players_cards: Array[Array]
 var players_tiles: Array[Array]
 var players_can_cancel_traps: Array[bool]
@@ -25,10 +25,9 @@ func init_game() -> void:
 	players_has_treasure_boost.clear()
 	for i in nr_players:
 		players_money.append(0)
-		var pawn := Pawn.new()
+		var pawn := Sprite2D.new()
 		pawn.texture = load("res://assets/pawns/%d.png" % i)
 		pawn.z_index = 2
-		pawn.pos = Vector2i(6, 3)
 		players_pawns.append(pawn)
 		players_cards.append([])
 		players_tiles.append([])

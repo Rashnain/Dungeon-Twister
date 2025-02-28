@@ -1,4 +1,4 @@
-class_name Card extends Sprite2D
+class_name Card
 
 
 static var node2d: Node2D

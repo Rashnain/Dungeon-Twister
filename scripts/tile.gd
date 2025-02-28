@@ -1,4 +1,4 @@
-class_name Tile extends Sprite2D
+class_name Tile
 
 
 static var node2d: Node2D

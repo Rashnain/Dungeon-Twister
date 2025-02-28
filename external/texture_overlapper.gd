@@ -1,5 +1,6 @@
 class_name TextureOverlapper
 
+# Source : https://github.com/MDIVS/GodotTextureOverlapper
 
 static func overlap(texture1: Texture2D, texture2: Texture2D) -> ImageTexture:
 	var image1: Image = texture1.get_image()

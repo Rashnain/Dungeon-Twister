@@ -34,7 +34,7 @@ var mode := State.NEXT_PLAYER
 func _ready() -> void:
 	Game.init_game()
 	for pawn in Game.players_pawns:
-		pawn.position = dungeon_back.map_to_local(pawn.pos)
+		pawn.position = dungeon_back.map_to_local(Vector2i(6, 3))
 		add_child(pawn)
 	update_stats()
 
