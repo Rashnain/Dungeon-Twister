@@ -128,32 +128,33 @@ func _process(_delta: float) -> void:
 
 	#  Placing a tile
 	if mode == State.PLACING_TILE:
-		texture_overlay_back.visible = true
-		texture_overlay_front.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		var tile_id = Game.players_tiles[player_playing][int(button_value)]
-		texture_overlay_back.texture = load("res://assets/tiles/%s.png" % [Tile.get_background_from_id(tile_id)])
-		texture_overlay_front.texture = load("res://assets/tiles/%s.png" % [Tile.get_foreground_from_id(tile_id % 5)])
-		texture_overlay_back.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
-		texture_overlay_front.position = texture_overlay_back.position
 		if Input.is_action_just_pressed("rotate"):
 			texture_overlay_back.rotation_degrees += 90
-		if Input.is_action_just_pressed("left_click"):
-			match int(texture_overlay_back.rotation_degrees) % 360:
-				0:
-					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_0)
-				90:
-					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_90)
-				180:
-					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_180)
-				270:
-					dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_270)
-			dungeon_front.set_cell(tile_mouse, 10, Vector2i(0, 0))
-			dungeon_front.get_cell_tile_data(tile_mouse).set_custom_data("real_id", tile_id)
-			Game.players_tiles[player_playing].remove_at(int(button_value))
-			texture_overlay_back.visible = false
-			texture_overlay_front.visible = false
-			mode = State.MOVEMENT
+		if not dungeon_back.get_cell_tile_data(tile_mouse) and Tile.is_connectable_with_surrounding(tile_id % 5, tile_mouse, int(texture_overlay_back.rotation_degrees / 90), dungeon_back):
+			color_overlay.color = Color("00ff007f")
+			if Input.is_action_just_pressed("left_click"):
+				match int(texture_overlay_back.rotation_degrees) % 360:
+					0:
+						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_0)
+					90:
+						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_90)
+					180:
+						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_180)
+					270:
+						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_270)
+				dungeon_front.set_cell(tile_mouse, 10, Vector2i(0, 0))
+				dungeon_front.get_cell_tile_data(tile_mouse).set_custom_data("real_id", tile_id)
+				Game.players_tiles[player_playing].remove_at(int(button_value))
+				texture_overlay_back.visible = false
+				texture_overlay_front.visible = false
+				mode = State.MOVEMENT
+		else:
+			color_overlay.color = Color("ff00007f")
+		texture_overlay_back.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
+		texture_overlay_front.position = texture_overlay_back.position
+		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	#  Choosing a card
 	if mode == State.CHOOSING_CARD:
@@ -171,6 +172,13 @@ func _process(_delta: float) -> void:
 	if mode == State.CHOOSING_TILE:
 		await button_pressed
 		Tile.remove_buttons()
+		var tile_id = Game.players_tiles[player_playing][int(button_value)]
+		texture_overlay_back.texture = load("res://assets/tiles/%s.png" % [Tile.get_background_from_id(tile_id)])
+		texture_overlay_front.texture = load("res://assets/tiles/%s.png" % [Tile.get_foreground_from_id(tile_id % 5)])
+		texture_overlay_back.rotation_degrees = 0
+		color_overlay.visible = true
+		texture_overlay_back.visible = true
+		texture_overlay_front.visible = true
 		mode = State.PLACING_TILE
 
 

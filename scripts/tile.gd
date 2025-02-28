@@ -1,7 +1,65 @@
 class_name Tile
 
 
+enum TileRotation {
+	ROTATE_0 = 0,
+	ROTATE_90 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_H,
+	ROTATE_180 = TileSetAtlasSource.TRANSFORM_FLIP_H | TileSetAtlasSource.TRANSFORM_FLIP_V,
+	ROTATE_270 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_V,
+}
+
+enum Side { TOP, RIGHT, BOTTOM, LEFT }
+
 static var node2d: Node2D
+
+var top: bool
+var right: bool
+var bottom: bool
+var left: bool
+
+
+func init(p_top: bool, p_right: bool, p_bottom: bool, p_left: bool) -> void:
+	top = p_top
+	right = p_right
+	bottom = p_bottom
+	left = p_left
+
+
+func rotate_90() -> void:
+	var temp := top
+	top = left
+	left = bottom
+	bottom = right
+	right = temp
+
+
+func is_connectable(other: Tile, side: Side) -> bool:
+	match side:
+		Side.TOP:
+			return top and other.bottom
+		Side.RIGHT:
+			return right and other.left
+		Side.BOTTOM:
+			return bottom and other.top
+		Side.LEFT:
+			return left and other.right
+	return false
+
+
+static func create_from_id(id: int) -> Tile:
+	var tile = Tile.new()
+	match id:
+		0:
+			tile.init(1, 1, 1, 1)
+		1:
+			tile.init(1, 0, 1, 0)
+		2:
+			tile.init(1, 1, 0, 0)
+		3:
+			tile.init(0, 0, 1, 0)
+		4:
+			tile.init(1, 1, 0, 1)
+	return tile
 
 
 static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
@@ -53,3 +111,39 @@ static func get_background_from_id(id: int) -> String:
 			return "empty_dead_end"
 
 	return "empty_three_ways"
+
+
+static func is_connectable_with_surrounding(id: int, pos: Vector2i, turns_90: int, dungeon: TileMapLayer) -> bool:
+	var tile := create_from_id(id)
+	for i in turns_90:
+		tile.rotate_90()
+
+	var surrounding_cells := dungeon.get_surrounding_cells(pos)
+	for cell_pos in surrounding_cells:
+		var neighbor_id := dungeon.get_cell_source_id(cell_pos)
+		if neighbor_id > -1:
+			var neighbor_tile := create_from_id(neighbor_id)
+			match dungeon.get_cell_alternative_tile(cell_pos):
+				TileRotation.ROTATE_90:
+					neighbor_tile.rotate_90()
+				TileRotation.ROTATE_180:
+					for i in 2:
+						neighbor_tile.rotate_90()
+				TileRotation.ROTATE_270:
+					for i in 3:
+						neighbor_tile.rotate_90()
+			var side
+			var offset_pos = cell_pos - pos
+			match offset_pos:
+				Vector2i(0, -1):
+					side = Side.TOP
+				Vector2i(1, 0):
+					side = Side.RIGHT
+				Vector2i(0, 1):
+					side = Side.BOTTOM
+				Vector2i(-1, 0):
+					side = Side.LEFT
+			if tile.is_connectable(neighbor_tile, side):
+				return true
+
+	return false
