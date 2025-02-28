@@ -1,35 +1,66 @@
-[gd_scene load_steps=3 format=3 uid="uid://c32p85ppgon22"]
+[gd_scene load_steps=2 format=3 uid="uid://c32p85ppgon22"]
 
-[ext_resource type="Texture2D" uid="uid://dxuetvfnx1r55" path="res://assets/title.png" id="1_etx8q"]
 [ext_resource type="Script" path="res://scripts/title.gd" id="1_xhuiw"]
 
 [node name="Title" type="Node2D"]
 script = ExtResource("1_xhuiw")
 
-[node name="TitleImage" type="TextureRect" parent="."]
-offset_top = 56.0
+[node name="CenterContainer" type="CenterContainer" parent="."]
 offset_right = 1300.0
-offset_bottom = 440.0
-texture = ExtResource("1_etx8q")
-expand_mode = 2
-stretch_mode = 5
+offset_bottom = 450.0
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CenterContainer"]
+layout_mode = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/shadow_offset_y = 10
+theme_override_constants/shadow_offset_x = -10
+theme_override_constants/shadow_outline_size = 25
+theme_override_font_sizes/normal_font_size = 160
+text = "Dungeon
+   Twister"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+shortcut_keys_enabled = false
 
 [node name="PlayerChooser" type="HSlider" parent="."]
-offset_left = 399.0
-offset_top = 524.0
-offset_right = 890.0
-offset_bottom = 551.0
+offset_left = 550.0
+offset_top = 510.0
+offset_right = 750.0
+offset_bottom = 540.0
 min_value = 2.0
 max_value = 6.0
 value = 2.0
 tick_count = 1
 
-[node name="PlayButton" type="Button" parent="."]
-offset_left = 582.0
-offset_top = 619.0
-offset_right = 697.0
-offset_bottom = 685.0
-theme_override_font_sizes/font_size = 42
-text = " Play "
+[node name="Label" type="Label" parent="PlayerChooser"]
+offset_left = 23.0
+offset_top = -25.0
+offset_right = 177.0
+offset_bottom = 1.0
+theme_override_font_sizes/font_size = 18
+text = "Number of player"
 
-[connection signal="pressed" from="PlayButton" to="." method="_on_play_button_pressed"]
+[node name="Min" type="Label" parent="PlayerChooser"]
+offset_left = -21.0
+offset_right = -10.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 18
+text = "2"
+
+[node name="Max" type="Label" parent="PlayerChooser"]
+offset_left = 210.0
+offset_right = 221.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 18
+text = "6"
+
+[node name="StartButton" type="Button" parent="."]
+offset_left = 586.0
+offset_top = 600.0
+offset_right = 714.0
+offset_bottom = 666.0
+theme_override_font_sizes/font_size = 42
+text = " Start "
+
+[connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]
