@@ -116,9 +116,6 @@ func _process(_delta: float) -> void:
 		else:
 			color_overlay.color = Color("ffffff7f")
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
-		# TODO check that the path is valid
-		# TODO reveal tile if unknown
-		# TODO tile effect
 		if Input.is_action_just_pressed("left_click") and not end_turn_button.is_hovered():
 			var pawn = Game.players_pawns[player_playing]
 			pawn.position = dungeon_back.map_to_local(tile_mouse)
@@ -183,10 +180,6 @@ func _process(_delta: float) -> void:
 		Card.create_buttons(player_playing, camera, self)
 		await button_pressed
 		var card_id = Game.players_cards[player_playing][int(button_value)]
-		match card_id:
-			_:
-				print("TODO")
-				# TODO card effects
 		Game.players_cards[player_playing].remove_at(int(button_value))
 		Card.remove_buttons()
 		state = State.NEXT_PLAYER
