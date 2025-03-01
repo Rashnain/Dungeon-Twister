@@ -159,10 +159,28 @@ text = " Roll D6 "
 [node name="CardButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
-offset_left = -570.0
-offset_right = -469.0
+offset_left = -569.0
+offset_right = -468.0
 offset_bottom = 31.0
 text = " Play a card "
+
+[node name="EndTurnButton" type="Button" parent="Camera2D"]
+unique_name_in_owner = true
+visible = false
+offset_left = -650.0
+offset_top = 200.0
+offset_right = -566.0
+offset_bottom = 231.0
+text = " End turn "
+
+[node name="StopPlacingButton" type="Button" parent="Camera2D"]
+unique_name_in_owner = true
+visible = false
+offset_left = -650.0
+offset_top = 200.0
+offset_right = -539.0
+offset_bottom = 231.0
+text = " Stop placing "
 
 [node name="BackButton" type="Button" parent="Camera2D"]
 offset_left = -650.0
@@ -208,4 +226,6 @@ text = "XX tiles"
 [connection signal="pressed" from="Camera2D/Die4Button" to="." method="_on_button_pressed" binds= ["d4"]]
 [connection signal="pressed" from="Camera2D/Die6Button" to="." method="_on_button_pressed" binds= ["d6"]]
 [connection signal="pressed" from="Camera2D/CardButton" to="." method="_on_button_pressed" binds= ["card"]]
+[connection signal="pressed" from="Camera2D/EndTurnButton" to="." method="_on_button_pressed" binds= ["end_turn"]]
+[connection signal="pressed" from="Camera2D/StopPlacingButton" to="." method="_on_button_pressed" binds= ["stop_placing"]]
 [connection signal="pressed" from="Camera2D/BackButton" to="." method="_on_back_button_pressed"]
