@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=3 uid="uid://c43pfmnt1csbv"]
+[gd_scene load_steps=28 format=3 uid="uid://c43pfmnt1csbv"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_ldrhe"]
 [ext_resource type="Texture2D" uid="uid://b1uajpwrx8hk6" path="res://assets/tiles/empty_corridor.png" id="3_dcqtx"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" uid="uid://cn7spl0xxxrqc" path="res://assets/tiles/tunnel.png" id="10_3kc6e"]
 [ext_resource type="Texture2D" uid="uid://c534a48dhhtbg" path="res://assets/tiles/goblin.png" id="11_ic0pr"]
 [ext_resource type="Texture2D" uid="uid://id62dq2higml" path="res://assets/tiles/treasure.png" id="12_kbvym"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="13_2b3bx"]
 [ext_resource type="Texture2D" uid="uid://b8n2tthybm8k1" path="res://assets/cards/stack.png" id="13_tarp1"]
 [ext_resource type="Texture2D" uid="uid://cujtgay0sq7br" path="res://assets/tiles/stack.png" id="14_34bmf"]
 
@@ -121,6 +122,7 @@ color = Color(1, 1, 1, 0.498039)
 [node name="Camera2D" type="Camera2D" parent="."]
 z_index = 1
 position = Vector2(650, 350)
+script = ExtResource("13_2b3bx")
 
 [node name="Stats" type="Label" parent="Camera2D"]
 unique_name_in_owner = true
