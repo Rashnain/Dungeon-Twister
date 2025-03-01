@@ -31,7 +31,7 @@ signal button_pressed
 var button_value
 var player_playing := -1
 var max_movement: int
-var mode := State.NEXT_PLAYER
+var state := State.NEXT_PLAYER
 
 
 func _ready() -> void:
@@ -45,14 +45,14 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if mode == State.DICE or mode == State.CHOOSING_CARD or mode == State.CHOOSING_TILE: return
+	if state == State.DICE or state == State.CHOOSING_CARD or state == State.CHOOSING_TILE: return
 
-	if mode == State.NEXT_PLAYER:
+	if state == State.NEXT_PLAYER:
 		player_playing = (player_playing + 1) % Game.nr_players
-		mode = State.DICE
+		state = State.DICE
 
 	# Dice rolling
-	if mode == State.DICE:
+	if state == State.DICE:
 		instructions.text = "It is Player %d's turn\n" % [player_playing+1]
 		if not Game.players_skip_next_turn[player_playing]:
 			# Tiles / cards
@@ -100,14 +100,14 @@ func _process(_delta: float) -> void:
 				max_movement = randi_range(1, 4)
 				instructions.text += " and %d move(s)" % [max_movement]
 				if len(Game.players_tiles[player_playing]) > 0:
-					mode = State.CHOOSING_TILE
+					state = State.CHOOSING_TILE
 				else:
-					mode = State.MOVEMENT
+					state = State.MOVEMENT
 			elif str(button_value) == "card":
-				mode = State.CHOOSING_CARD
+				state = State.CHOOSING_CARD
 
 	# Movement
-	if mode == State.MOVEMENT:
+	if state == State.MOVEMENT:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		var data = dungeon_back.get_cell_tile_data(tile_mouse)
@@ -126,12 +126,12 @@ func _process(_delta: float) -> void:
 			if not max_movement:
 				end_turn_button.visible = false
 				color_overlay.visible = false
-				mode = State.NEXT_PLAYER
+				state = State.NEXT_PLAYER
 			else:
 				end_turn_button.visible = true
 
 	# Choosing a player
-	if mode == State.CHOOSING_PLAYER:
+	if state == State.CHOOSING_PLAYER:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		for pawn in Game.players_pawns:
@@ -142,7 +142,7 @@ func _process(_delta: float) -> void:
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	#  Placing a tile
-	if mode == State.PLACING_TILE:
+	if state == State.PLACING_TILE:
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		var tile_id = Game.players_tiles[player_playing][int(button_value)]
 		if Input.is_action_just_pressed("rotate"):
@@ -165,13 +165,13 @@ func _process(_delta: float) -> void:
 				texture_overlay_back.visible = false
 				texture_overlay_front.visible = false
 				if Game.players_tiles[player_playing].is_empty():
-					mode = State.MOVEMENT
+					state = State.MOVEMENT
 				else:
 					stop_placing_button.visible = true
 					texture_overlay_back.visible = false
 					texture_overlay_front.visible = false
 					color_overlay.visible = false
-					mode = State.CHOOSING_TILE
+					state = State.CHOOSING_TILE
 		else:
 			color_overlay.color = Color("ff00007f")
 		texture_overlay_back.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
@@ -179,7 +179,7 @@ func _process(_delta: float) -> void:
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	#  Choosing a card
-	if mode == State.CHOOSING_CARD:
+	if state == State.CHOOSING_CARD:
 		Card.create_buttons(player_playing, camera, self)
 		await button_pressed
 		var card_id = Game.players_cards[player_playing][int(button_value)]
@@ -189,10 +189,10 @@ func _process(_delta: float) -> void:
 				# TODO card effects
 		Game.players_cards[player_playing].remove_at(int(button_value))
 		Card.remove_buttons()
-		mode = State.NEXT_PLAYER
+		state = State.NEXT_PLAYER
 
 	#  Choosing a tile
-	if mode == State.CHOOSING_TILE:
+	if state == State.CHOOSING_TILE:
 		Tile.create_buttons(player_playing, camera, self)
 		stop_placing_button.visible = true
 		await button_pressed
@@ -202,7 +202,7 @@ func _process(_delta: float) -> void:
 			texture_overlay_back.visible = false
 			texture_overlay_front.visible = false
 			color_overlay.visible = false
-			mode = State.MOVEMENT
+			state = State.MOVEMENT
 		else:
 			var tile_id = Game.players_tiles[player_playing][int(button_value)]
 			texture_overlay_back.texture = load("res://assets/tiles/%s.png" % [Tile.get_background_from_id(tile_id)])
@@ -211,7 +211,7 @@ func _process(_delta: float) -> void:
 			texture_overlay_back.visible = true
 			texture_overlay_front.visible = true
 			color_overlay.visible = true
-			mode = State.PLACING_TILE
+			state = State.PLACING_TILE
 
 
 func update_stats() -> void:
@@ -229,7 +229,7 @@ func _on_button_pressed(value: String) -> void:
 	if value == "end_turn":
 		end_turn_button.visible = false
 		color_overlay.visible = false
-		mode = State.NEXT_PLAYER
+		state = State.NEXT_PLAYER
 	else:
 		button_value = value
 		button_pressed.emit()
