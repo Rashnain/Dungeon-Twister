@@ -17,7 +17,7 @@ config/icon="res://icon.png"
 
 [autoload]
 
-Game="*res://autoloads/game.gd"
+GD="*res://autoloads/game_data.gd"
 
 [display]
 

@@ -36,10 +36,10 @@ var custom_cell_data := {}
 
 
 func _ready() -> void:
-	Game.init_game()
-	tile_stack_label.text = "%s tiles" % len(Game.tile_stack)
-	card_stack_label.text = "%s cards" % len(Game.card_stack)
-	for pawn in Game.players_pawns:
+	GD.init_game()
+	tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
+	card_stack_label.text = "%s cards" % len(GD.card_stack)
+	for pawn in GD.players_pawns:
 		pawn.position = dungeon_back.map_to_local(Vector2i(6, 3))
 		add_child(pawn)
 	update_stats()
@@ -49,13 +49,13 @@ func _process(_delta: float) -> void:
 	if state == State.DICE or state == State.CHOOSING_CARD or state == State.CHOOSING_TILE: return
 
 	if state == State.NEXT_PLAYER:
-		player_playing = (player_playing + 1) % Game.nr_players
+		player_playing = (player_playing + 1) % GD.nr_players
 		state = State.DICE
 
 	# Dice rolling
 	if state == State.DICE:
 		instructions.text = "It is Player %d's turn\n" % [player_playing+1]
-		if not Game.players_skip_next_turn[player_playing]:
+		if not GD.players_skip_next_turn[player_playing]:
 			# Tiles / cards
 			d6_button.visible = true
 			await button_pressed
@@ -64,35 +64,35 @@ func _process(_delta: float) -> void:
 			match die_value:
 				1:
 					for j in 1:
-						Game.draw_card(player_playing)
+						GD.draw_card(player_playing)
 					instructions.text += "They got 1 card"
 				2:
 					for j in 2:
-						Game.draw_card(player_playing)
+						GD.draw_card(player_playing)
 					instructions.text += "They got 2 cards"
 				3:
 					for j in 2:
-						Game.draw_tile(player_playing)
+						GD.draw_tile(player_playing)
 					instructions.text += "They got 2 tiles"
 				4:
 					for j in 3:
-						Game.draw_tile(player_playing)
+						GD.draw_tile(player_playing)
 					instructions.text += "They got 3 tiles"
 				_:
 					for j in 1:
-						Game.draw_tile(player_playing)
+						GD.draw_tile(player_playing)
 					instructions.text += "They got 1 tile"
-			if len(Game.tile_stack) > 0:
-				tile_stack_label.text = "%s tiles" % len(Game.tile_stack)
+			if len(GD.tile_stack) > 0:
+				tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
 			else:
 				tile_stack_label.text = "1 tile"
-			if len(Game.card_stack) > 0:
-				card_stack_label.text = "%s cards" % len(Game.card_stack)
+			if len(GD.card_stack) > 0:
+				card_stack_label.text = "%s cards" % len(GD.card_stack)
 			else:
 				card_stack_label.text = "1 card"
 			# Movement
 			d4_button.visible = true
-			if len(Game.players_cards[player_playing]) > 0:
+			if len(GD.players_cards[player_playing]) > 0:
 				card_button.visible = true
 			await button_pressed
 			d4_button.visible = false
@@ -100,7 +100,7 @@ func _process(_delta: float) -> void:
 			if str(button_value) == "d4":
 				max_movement = randi_range(1, 4)
 				instructions.text += " and %d move(s)" % [max_movement]
-				if len(Game.players_tiles[player_playing]) > 0:
+				if len(GD.players_tiles[player_playing]) > 0:
 					state = State.CHOOSING_TILE
 				else:
 					state = State.MOVEMENT
@@ -126,7 +126,7 @@ func _process(_delta: float) -> void:
 				else:
 					dungeon_front.set_cell(tile_mouse, real_id, Vector2i(0, 0), cell_alt)
 				custom_cell_data.erase(tile_mouse)
-			var pawn = Game.players_pawns[player_playing]
+			var pawn = GD.players_pawns[player_playing]
 			pawn.position = dungeon_back.map_to_local(tile_mouse)
 			max_movement -= 1
 			if not max_movement:
@@ -140,7 +140,7 @@ func _process(_delta: float) -> void:
 	if state == State.CHOOSING_PLAYER:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
-		for pawn in Game.players_pawns:
+		for pawn in GD.players_pawns:
 			if pawn.pos == tile_mouse:
 				color_overlay.color = Color("00ff007f")
 			else:
@@ -150,7 +150,7 @@ func _process(_delta: float) -> void:
 	#  Placing a tile
 	if state == State.PLACING_TILE:
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
-		var tile_id = Game.players_tiles[player_playing][int(button_value)]
+		var tile_id = GD.players_tiles[player_playing][int(button_value)]
 		if Input.is_action_just_pressed("rotate"):
 			texture_overlay_back.rotation_degrees += 90
 		if not dungeon_back.get_cell_tile_data(tile_mouse) and Tile.is_connectable_with_surrounding(tile_id % 5, tile_mouse, int(texture_overlay_back.rotation_degrees / 90), dungeon_back):
@@ -167,10 +167,10 @@ func _process(_delta: float) -> void:
 						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_270)
 				dungeon_front.set_cell(tile_mouse, 0, Vector2i(0, 0))
 				custom_cell_data[tile_mouse] = int(tile_id / 5)
-				Game.players_tiles[player_playing].remove_at(int(button_value))
+				GD.players_tiles[player_playing].remove_at(int(button_value))
 				texture_overlay_back.visible = false
 				texture_overlay_front.visible = false
-				if Game.players_tiles[player_playing].is_empty():
+				if GD.players_tiles[player_playing].is_empty():
 					state = State.MOVEMENT
 				else:
 					stop_placing_button.visible = true
@@ -188,8 +188,8 @@ func _process(_delta: float) -> void:
 	if state == State.CHOOSING_CARD:
 		Card.create_buttons(player_playing, camera, self)
 		await button_pressed
-		var card_id = Game.players_cards[player_playing][int(button_value)]
-		Game.players_cards[player_playing].remove_at(int(button_value))
+		var card_id = GD.players_cards[player_playing][int(button_value)]
+		GD.players_cards[player_playing].remove_at(int(button_value))
 		Card.remove_buttons()
 		state = State.NEXT_PLAYER
 
@@ -206,7 +206,7 @@ func _process(_delta: float) -> void:
 			color_overlay.visible = false
 			state = State.MOVEMENT
 		else:
-			var tile_id = Game.players_tiles[player_playing][int(button_value)]
+			var tile_id = GD.players_tiles[player_playing][int(button_value)]
 			texture_overlay_back.texture = load("res://assets/tiles/%s.png" % [Tile.get_background_from_id(tile_id)])
 			texture_overlay_front.texture = load("res://assets/tiles/%s.png" % [Tile.get_foreground_from_id(tile_id % 5)])
 			texture_overlay_back.rotation_degrees = 0
@@ -218,11 +218,11 @@ func _process(_delta: float) -> void:
 
 func update_stats() -> void:
 	var players_str = ""
-	for i in Game.nr_players:
-		players_str += "Player %d : %d coins" % [i+1, Game.players_money[i]]
-		players_str += " [Skip next turn] " if Game.players_skip_next_turn[i] else ""
-		players_str += " [Treasure boost] " if Game.players_has_treasure_boost[i] else ""
-		players_str += " [Cancel next trap] " if Game.players_can_cancel_traps[i] else ""
+	for i in GD.nr_players:
+		players_str += "Player %d : %d coins" % [i+1, GD.players_money[i]]
+		players_str += " [Skip next turn] " if GD.players_skip_next_turn[i] else ""
+		players_str += " [Treasure boost] " if GD.players_has_treasure_boost[i] else ""
+		players_str += " [Cancel next trap] " if GD.players_can_cancel_traps[i] else ""
 		players_str += "\n"
 	stats.text = players_str
 
