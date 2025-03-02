@@ -218,9 +218,9 @@ text = " Stop placing "
 
 [node name="BackButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = -635.0
+offset_left = 581.0
 offset_top = 324.0
-offset_right = -581.0
+offset_right = 635.0
 offset_bottom = 355.0
 text = " Back "
 
