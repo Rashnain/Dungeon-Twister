@@ -4,7 +4,7 @@ class_name Card
 static var node2d: Node2D
 
 
-static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
+static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void:
 	node2d = Node2D.new()
 	node2d.position = Vector2(-635, 130)
 	camera.add_child(node2d)
@@ -19,7 +19,7 @@ static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
 		card.pressed.connect(game._on_button_pressed.bind("%d" % i))
 
 
-static func remove_buttons() -> void :
+static func remove_buttons() -> void:
 	node2d.queue_free()
 
 
@@ -43,7 +43,5 @@ static func get_name_from_id(id: int) -> String:
 			return "insight"
 		8:
 			return "spawn_bandit"
-		9:
-			return "switch_tile"
 		_:
-			return "unknow"
+			return "switch_tile"

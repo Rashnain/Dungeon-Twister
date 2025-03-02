@@ -303,7 +303,7 @@ func update_stats() -> void:
 	stats.text = players_str
 
 
-func generate_treasure():
+func generate_treasure() -> void:
 	var coins: int
 	var cards: int
 	var multiplier := 1

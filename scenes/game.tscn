@@ -103,6 +103,7 @@ tile_set = SubResource("TileSet_y2f2t")
 
 [node name="TextureOverlayBack" type="TextureRect" parent="."]
 unique_name_in_owner = true
+visible = false
 offset_right = 100.0
 offset_bottom = 100.0
 pivot_offset = Vector2(50, 50)
@@ -119,7 +120,6 @@ unique_name_in_owner = true
 visible = false
 offset_right = 100.0
 offset_bottom = 100.0
-pivot_offset = Vector2(50, 50)
 color = Color(1, 1, 1, 0.498039)
 
 [node name="Camera2D" type="Camera2D" parent="."]
