@@ -201,26 +201,26 @@ text = " Play a card "
 unique_name_in_owner = true
 visible = false
 offset_left = -640.0
-offset_top = 200.0
+offset_top = 265.0
 offset_right = -556.0
-offset_bottom = 231.0
+offset_bottom = 296.0
 text = " End turn "
 
 [node name="StopPlacingButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
 offset_left = -640.0
-offset_top = 200.0
+offset_top = 265.0
 offset_right = -529.0
-offset_bottom = 231.0
+offset_bottom = 296.0
 text = " Stop placing "
 
 [node name="BackButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = -640.0
-offset_top = 319.0
+offset_top = 329.0
 offset_right = -586.0
-offset_bottom = 350.0
+offset_bottom = 360.0
 text = " Back "
 
 [node name="CardStack" type="TextureRect" parent="Camera2D"]

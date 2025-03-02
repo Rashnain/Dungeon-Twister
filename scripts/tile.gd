@@ -64,8 +64,9 @@ static func create_from_id(id: int) -> Tile:
 
 static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
 	node2d = Node2D.new()
+	node2d.position = Vector2(-635, 135)
 	camera.add_child(node2d)
-	var x := -645
+	var x := 0
 	for i in len(GD.players_tiles[id]):
 		var tile_id = GD.players_tiles[id][i]
 		var tile = TextureButton.new()
@@ -73,7 +74,7 @@ static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void :
 			tile.texture_normal = load("res://assets/tiles/%s.png" % [get_background_from_id(tile_id)])
 		else:
 			tile.texture_normal = TextureOverlapper.overlap_str("tiles/%s" % [get_background_from_id(tile_id)], "tiles/%s" % [get_foreground_from_id(tile_id)])
-		tile.position = Vector2(x, -50)
+		tile.position = Vector2(x, 0)
 		node2d.add_child(tile)
 		x += 105
 		tile.pressed.connect(game._on_button_pressed.bind("%d" % i))

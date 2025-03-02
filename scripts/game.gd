@@ -61,10 +61,11 @@ func _process(_delta: float) -> void:
 		if instructions.text != "":
 			instructions.text += "\n\n"
 		if GD.players_skip_next_turn[player_playing]:
-			instructions.text += "Player %d's turn is skiped." % [player_playing+1]
+			instructions.text += "Player %d turn is skiped." % [player_playing+1]
 			GD.players_skip_next_turn[player_playing] = false
+			update_stats()
 		else:
-			instructions.text += "It is Player %d's turn\n" % [player_playing+1]
+			instructions.text += "It is Player %d turn :\n" % [player_playing+1]
 			state = State.DICE
 
 	# Dice rolling
@@ -78,23 +79,23 @@ func _process(_delta: float) -> void:
 				1:
 					for j in 1:
 						GD.draw_card(player_playing)
-					instructions.text += "They got 1 card"
+					instructions.text += " - They got 1 card"
 				2:
 					for j in 2:
 						GD.draw_card(player_playing)
-					instructions.text += "They got 2 cards"
+					instructions.text += " - They got 2 cards"
 				3:
 					for j in 2:
 						GD.draw_tile(player_playing)
-					instructions.text += "They got 2 tiles"
+					instructions.text += " - They got 2 tiles"
 				4:
 					for j in 3:
 						GD.draw_tile(player_playing)
-					instructions.text += "They got 3 tiles"
+					instructions.text += " - They got 3 tiles"
 				_:
 					for j in 1:
 						GD.draw_tile(player_playing)
-					instructions.text += "They got 1 tile"
+					instructions.text += " - They got 1 tile"
 			update_stats()
 			if len(GD.tile_stack) > 0:
 				tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
@@ -278,7 +279,7 @@ func generate_treasure():
 	GD.players_money[player_playing] += coins
 	for i in cards:
 		GD.draw_card(player_playing)
-	instructions.text += "\nTreasure : %d coin(s) %d card(s)" % [coins, cards]
+	instructions.text += "\n - Treasure : %d coin(s) %d card(s)" % [coins, cards]
 	update_stats()
 
 
@@ -287,16 +288,17 @@ func tile_effect(id: int) -> void:
 	match id:
 		1:
 			GD.players_tiles[player_playing].pop_at(randi_range(0, len(GD.players_tiles[player_playing])-1))
-			instructions.text += "\nOne of their tiles were taken by a demon !"
+			instructions.text += "\n - One of their tiles were taken by a demon !"
 		2:
 			GD.players_cards[player_playing].pop_at(randi_range(0, len(GD.players_cards[player_playing])-1))
-			instructions.text += "\nThey got trapped in spikes and lost a card !"
+			instructions.text += "\n - They got trapped in spikes and lost a card !"
 		3:
 			GD.players_skip_next_turn[player_playing] = true
-			instructions.text += "\nThey got lost in a infinte tunnel !"
+			instructions.text += "\n - They got lost in a infinte tunnel !"
 		4:
-			GD.players_money[player_playing] -= 2
-			instructions.text += "\nA goblin robbed them 2 coins !"
+			if GD.players_money[player_playing] > 1:
+				GD.players_money[player_playing] -= 2
+			instructions.text += "\n - A goblin robbed them 2 coins !"
 	state = State.NEXT_PLAYER
 	end_turn_button.visible = false
 	color_overlay.visible = false
