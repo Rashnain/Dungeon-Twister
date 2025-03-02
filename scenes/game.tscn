@@ -129,10 +129,10 @@ script = ExtResource("13_2b3bx")
 
 [node name="Stats" type="Label" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = -650.0
+offset_left = -640.0
 offset_top = -350.0
-offset_right = -521.0
-offset_bottom = -275.0
+offset_right = -511.0
+offset_bottom = -197.0
 text = "Player 1 : X coins
 Player 2 : X coins
 Player 3 : X coins
@@ -141,11 +141,11 @@ Player 5 : X coins
 Player 6 : X coins"
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D"]
-offset_left = -650.0
+offset_left = -640.0
 offset_top = -185.0
-offset_right = -300.0
+offset_right = -290.0
 offset_bottom = 45.0
-mouse_filter = 2
+mouse_filter = 1
 color = Color(0.196078, 0.196078, 0.196078, 0.501961)
 
 [node name="ScrollContainer" type="ScrollContainer" parent="Camera2D/ColorRect"]
@@ -172,62 +172,63 @@ text = "It is Player X to play
 
 [node name="Die4Button" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = -650.0
+visible = false
+offset_left = -640.0
 offset_top = 75.0
-offset_right = -579.0
+offset_right = -569.0
 offset_bottom = 106.0
 text = " Roll D4 "
 
 [node name="Die6Button" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
-offset_left = -650.0
+offset_left = -640.0
 offset_top = 75.0
-offset_right = -579.0
+offset_right = -569.0
 offset_bottom = 106.0
 text = " Roll D6 "
 
 [node name="CardButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
-offset_left = -569.0
+offset_left = -559.0
 offset_top = 75.0
-offset_right = -468.0
+offset_right = -458.0
 offset_bottom = 106.0
 text = " Play a card "
 
 [node name="EndTurnButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
-offset_left = -650.0
+offset_left = -640.0
 offset_top = 200.0
-offset_right = -566.0
+offset_right = -556.0
 offset_bottom = 231.0
 text = " End turn "
 
 [node name="StopPlacingButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
-offset_left = -650.0
+offset_left = -640.0
 offset_top = 200.0
-offset_right = -539.0
+offset_right = -529.0
 offset_bottom = 231.0
 text = " Stop placing "
 
 [node name="BackButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = -650.0
+offset_left = -640.0
 offset_top = 319.0
-offset_right = -596.0
+offset_right = -586.0
 offset_bottom = 350.0
 text = " Back "
 
 [node name="CardStack" type="TextureRect" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = 291.0
-offset_top = -338.0
-offset_right = 505.0
-offset_bottom = -124.0
+offset_left = 284.0
+offset_top = -348.0
+offset_right = 498.0
+offset_bottom = -134.0
 mouse_filter = 2
 texture = ExtResource("13_tarp1")
 expand_mode = 2
@@ -243,10 +244,10 @@ text = "XX cards"
 
 [node name="TileStack" type="TextureRect" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = 411.0
-offset_top = -350.0
-offset_right = 650.0
-offset_bottom = -108.0
+offset_left = 400.0
+offset_top = -360.0
+offset_right = 640.0
+offset_bottom = -118.0
 mouse_filter = 2
 texture = ExtResource("14_34bmf")
 
