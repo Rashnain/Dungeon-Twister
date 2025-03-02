@@ -32,6 +32,7 @@ var button_value
 var player_playing := -1
 var max_movement: int
 var state := State.NEXT_PLAYER
+var custom_cell_data := {}
 
 
 func _ready() -> void:
@@ -117,6 +118,14 @@ func _process(_delta: float) -> void:
 			color_overlay.color = Color("ffffff7f")
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 		if Input.is_action_just_pressed("left_click") and not end_turn_button.is_hovered():
+			var cell_alt := dungeon_front.get_cell_alternative_tile(tile_mouse)
+			if custom_cell_data.has(tile_mouse):
+				var real_id: int = custom_cell_data[tile_mouse]
+				if real_id == 0:
+					dungeon_front.set_cell(tile_mouse)
+				else:
+					dungeon_front.set_cell(tile_mouse, real_id, Vector2i(0, 0), cell_alt)
+				custom_cell_data.erase(tile_mouse)
 			var pawn = Game.players_pawns[player_playing]
 			pawn.position = dungeon_back.map_to_local(tile_mouse)
 			max_movement -= 1
@@ -156,8 +165,8 @@ func _process(_delta: float) -> void:
 						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_180)
 					270:
 						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_270)
-				dungeon_front.set_cell(tile_mouse, 10, Vector2i(0, 0))
-				dungeon_front.get_cell_tile_data(tile_mouse).set_custom_data("real_id", tile_id)
+				dungeon_front.set_cell(tile_mouse, 0, Vector2i(0, 0))
+				custom_cell_data[tile_mouse] = int(tile_id / 5)
 				Game.players_tiles[player_playing].remove_at(int(button_value))
 				texture_overlay_back.visible = false
 				texture_overlay_front.visible = false

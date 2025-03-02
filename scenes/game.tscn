@@ -1,17 +1,17 @@
-[gd_scene load_steps=28 format=3 uid="uid://c43pfmnt1csbv"]
+[gd_scene load_steps=29 format=3 uid="uid://c43pfmnt1csbv"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_ldrhe"]
 [ext_resource type="Texture2D" uid="uid://b1uajpwrx8hk6" path="res://assets/tiles/empty_corridor.png" id="3_dcqtx"]
 [ext_resource type="Texture2D" uid="uid://dbplyv87rvmos" path="res://assets/tiles/empty_corner.png" id="4_2sx1e"]
-[ext_resource type="Texture2D" uid="uid://cpkiiug2sc0pp" path="res://assets/tiles/question_mark.png" id="4_vw7e7"]
 [ext_resource type="Texture2D" uid="uid://d34clas6yfvni" path="res://assets/tiles/empty_dead_end.png" id="5_2or7v"]
 [ext_resource type="Texture2D" uid="uid://toiis6bopq1" path="res://assets/tiles/empty_four_ways.png" id="5_gdwn0"]
 [ext_resource type="Texture2D" uid="uid://xxdp3hnee0iq" path="res://assets/tiles/empty_three_ways.png" id="6_di4wj"]
-[ext_resource type="Texture2D" uid="uid://b0p0rsolapxni" path="res://assets/tiles/demon.png" id="8_4hq06"]
-[ext_resource type="Texture2D" uid="uid://jjvrcck1e1su" path="res://assets/tiles/spikes.png" id="9_yccpk"]
-[ext_resource type="Texture2D" uid="uid://cn7spl0xxxrqc" path="res://assets/tiles/tunnel.png" id="10_3kc6e"]
-[ext_resource type="Texture2D" uid="uid://c534a48dhhtbg" path="res://assets/tiles/goblin.png" id="11_ic0pr"]
-[ext_resource type="Texture2D" uid="uid://id62dq2higml" path="res://assets/tiles/treasure.png" id="12_kbvym"]
+[ext_resource type="Texture2D" uid="uid://cpkiiug2sc0pp" path="res://assets/tiles/question_mark.png" id="7_au7ym"]
+[ext_resource type="Texture2D" uid="uid://b0p0rsolapxni" path="res://assets/tiles/demon.png" id="8_nnpvl"]
+[ext_resource type="Texture2D" uid="uid://jjvrcck1e1su" path="res://assets/tiles/spikes.png" id="9_r2w1b"]
+[ext_resource type="Texture2D" uid="uid://cn7spl0xxxrqc" path="res://assets/tiles/tunnel.png" id="10_hcsuh"]
+[ext_resource type="Texture2D" uid="uid://c534a48dhhtbg" path="res://assets/tiles/goblin.png" id="11_e0qhr"]
+[ext_resource type="Texture2D" uid="uid://id62dq2higml" path="res://assets/tiles/treasure.png" id="12_fp4gn"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="13_2b3bx"]
 [ext_resource type="Texture2D" uid="uid://b8n2tthybm8k1" path="res://assets/cards/stack.png" id="13_tarp1"]
 [ext_resource type="Texture2D" uid="uid://cujtgay0sq7br" path="res://assets/tiles/stack.png" id="14_34bmf"]
@@ -23,11 +23,6 @@ texture_region_size = Vector2i(100, 100)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_jclgt"]
 texture = ExtResource("3_dcqtx")
-texture_region_size = Vector2i(100, 100)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_8sbp3"]
-texture = ExtResource("4_vw7e7")
 texture_region_size = Vector2i(100, 100)
 0:0/0 = 0
 
@@ -46,46 +41,54 @@ texture = ExtResource("6_di4wj")
 texture_region_size = Vector2i(100, 100)
 0:0/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_vafpm"]
-texture = ExtResource("8_4hq06")
-texture_region_size = Vector2i(100, 100)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_566bs"]
-texture = ExtResource("9_yccpk")
-texture_region_size = Vector2i(100, 100)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_p1qei"]
-texture = ExtResource("10_3kc6e")
-texture_region_size = Vector2i(100, 100)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_6sldu"]
-texture = ExtResource("11_ic0pr")
-texture_region_size = Vector2i(100, 100)
-0:0/0 = 0
-
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f7jpp"]
-texture = ExtResource("12_kbvym")
-texture_region_size = Vector2i(100, 100)
-0:0/0 = 0
-
 [sub_resource type="TileSet" id="TileSet_ri8qo"]
+tile_size = Vector2i(100, 100)
+sources/0 = SubResource("TileSetAtlasSource_0r761")
+sources/1 = SubResource("TileSetAtlasSource_jclgt")
+sources/2 = SubResource("TileSetAtlasSource_52rlb")
+sources/3 = SubResource("TileSetAtlasSource_odjt2")
+sources/4 = SubResource("TileSetAtlasSource_fjhw2")
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uv4ft"]
+texture = ExtResource("7_au7ym")
+texture_region_size = Vector2i(100, 100)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_esj2g"]
+texture = ExtResource("8_nnpvl")
+texture_region_size = Vector2i(100, 100)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_5v8rc"]
+texture = ExtResource("9_r2w1b")
+texture_region_size = Vector2i(100, 100)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_f2ptr"]
+texture = ExtResource("10_hcsuh")
+texture_region_size = Vector2i(100, 100)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_icg7i"]
+texture = ExtResource("11_e0qhr")
+texture_region_size = Vector2i(100, 100)
+0:0/0 = 0
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d8oqh"]
+texture = ExtResource("12_fp4gn")
+texture_region_size = Vector2i(100, 100)
+0:0/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_y2f2t"]
 tile_size = Vector2i(100, 100)
 custom_data_layer_0/name = "real_id"
 custom_data_layer_0/type = 2
-sources/2 = SubResource("TileSetAtlasSource_52rlb")
-sources/0 = SubResource("TileSetAtlasSource_0r761")
-sources/1 = SubResource("TileSetAtlasSource_jclgt")
-sources/3 = SubResource("TileSetAtlasSource_odjt2")
-sources/4 = SubResource("TileSetAtlasSource_fjhw2")
-sources/5 = SubResource("TileSetAtlasSource_vafpm")
-sources/6 = SubResource("TileSetAtlasSource_566bs")
-sources/7 = SubResource("TileSetAtlasSource_p1qei")
-sources/8 = SubResource("TileSetAtlasSource_6sldu")
-sources/9 = SubResource("TileSetAtlasSource_f7jpp")
-sources/10 = SubResource("TileSetAtlasSource_8sbp3")
+sources/0 = SubResource("TileSetAtlasSource_uv4ft")
+sources/1 = SubResource("TileSetAtlasSource_esj2g")
+sources/2 = SubResource("TileSetAtlasSource_5v8rc")
+sources/3 = SubResource("TileSetAtlasSource_f2ptr")
+sources/4 = SubResource("TileSetAtlasSource_icg7i")
+sources/5 = SubResource("TileSetAtlasSource_d8oqh")
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_ldrhe")
@@ -95,8 +98,7 @@ tile_map_data = PackedByteArray(0, 0, 6, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 tile_set = SubResource("TileSet_ri8qo")
 
 [node name="DungeonGridFront" type="TileMapLayer" parent="."]
-tile_map_data = PackedByteArray(0, 0, 6, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-tile_set = SubResource("TileSet_ri8qo")
+tile_set = SubResource("TileSet_y2f2t")
 
 [node name="TextureOverlayBack" type="TextureRect" parent="."]
 unique_name_in_owner = true
