@@ -3,7 +3,7 @@
 
 ### Features
 * Dungeon
-* Tongue twisters
+* ~~Tongue twisters~~
 * Demons and goblins
 * Beautiful artworks
 
