@@ -200,6 +200,7 @@ offset_left = 291.0
 offset_top = -338.0
 offset_right = 505.0
 offset_bottom = -124.0
+mouse_filter = 2
 texture = ExtResource("13_tarp1")
 expand_mode = 2
 stretch_mode = 4
@@ -218,6 +219,7 @@ offset_left = 411.0
 offset_top = -350.0
 offset_right = 650.0
 offset_bottom = -108.0
+mouse_filter = 2
 texture = ExtResource("14_34bmf")
 
 [node name="Label" type="Label" parent="Camera2D/TileStack"]
