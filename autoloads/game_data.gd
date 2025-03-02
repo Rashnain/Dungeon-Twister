@@ -10,8 +10,8 @@ var players_can_cancel_traps: Array[bool]
 var players_skip_next_turn: Array[bool]
 var players_has_treasure_boost: Array[bool]
 
-var tile_stack : Array[int]
-var card_stack : Array[int]
+var tile_stack: Array[int]
+var card_stack: Array[int]
 
 
 func init_game() -> void:

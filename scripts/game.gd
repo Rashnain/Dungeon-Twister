@@ -12,22 +12,22 @@ enum State { NEXT_PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSIN
 
 signal button_pressed
 
-@onready var dungeon_back : TileMapLayer = $DungeonGridBack
-@onready var dungeon_front : TileMapLayer = $DungeonGridFront
-@onready var color_overlay : ColorRect = %ColorOverlay
-@onready var texture_overlay_back : TextureRect = %TextureOverlayBack
-@onready var texture_overlay_front : TextureRect = %TextureOverlayFront
-@onready var camera : Camera2D = $Camera2D
-@onready var stats : Label = %Stats
-@onready var instructions : Label = %Instructions
-static var d4_button : Button
-static var d6_button : Button
-static var card_button : Button
-static var end_turn_button : Button
-static var stop_placing_button : Button
-static var back_button : Button
-@onready var tile_stack_label : Label = %TileStack/Label
-@onready var card_stack_label : Label = %CardStack/Label
+@onready var dungeon_back: TileMapLayer = $DungeonGridBack
+@onready var dungeon_front: TileMapLayer = $DungeonGridFront
+@onready var color_overlay: ColorRect = %ColorOverlay
+@onready var texture_overlay_back: TextureRect = %TextureOverlayBack
+@onready var texture_overlay_front: TextureRect = %TextureOverlayFront
+@onready var camera: Camera2D = $Camera2D
+@onready var stats: Label = %Stats
+@onready var instructions: Label = %Instructions
+static var d4_button: Button
+static var d6_button: Button
+static var card_button: Button
+static var end_turn_button: Button
+static var stop_placing_button: Button
+static var back_button: Button
+@onready var tile_stack_label: Label = %TileStack/Label
+@onready var card_stack_label: Label = %CardStack/Label
 
 var button_value
 var player_playing := -1

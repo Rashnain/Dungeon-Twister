@@ -1,7 +1,7 @@
 extends ScrollContainer
 
 
-@onready var instructions : Label = %Instructions
+@onready var instructions: Label = %Instructions
 
 var is_up_to_date := true
 
