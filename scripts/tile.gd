@@ -122,28 +122,52 @@ static func is_connectable_with_surrounding(id: int, pos: Vector2i, turns_90: in
 	for cell_pos in surrounding_cells:
 		var neighbor_id := dungeon.get_cell_source_id(cell_pos)
 		if neighbor_id > -1:
-			var neighbor_tile := create_from_id(neighbor_id)
-			match dungeon.get_cell_alternative_tile(cell_pos):
-				TileRotation.ROTATE_90:
-					neighbor_tile.rotate_90()
-				TileRotation.ROTATE_180:
-					for i in 2:
-						neighbor_tile.rotate_90()
-				TileRotation.ROTATE_270:
-					for i in 3:
-						neighbor_tile.rotate_90()
-			var side
-			var offset_pos = cell_pos - pos
-			match offset_pos:
-				Vector2i(0, -1):
-					side = Side.TOP
-				Vector2i(1, 0):
-					side = Side.RIGHT
-				Vector2i(0, 1):
-					side = Side.BOTTOM
-				Vector2i(-1, 0):
-					side = Side.LEFT
-			if tile.is_connectable(neighbor_tile, side):
+			if is_connectable_tile_pos(tile, pos, cell_pos, dungeon):
 				return true
 
+	return false
+
+
+static func is_connectable_tile_pos(tile: Tile, tile_pos: Vector2i, neighbor_pos: Vector2i, dungeon: TileMapLayer) -> bool:
+	var neighbor_id := dungeon.get_cell_source_id(neighbor_pos)
+	var neighbor_tile := create_from_id(neighbor_id)
+	match dungeon.get_cell_alternative_tile(neighbor_pos):
+		TileRotation.ROTATE_90:
+			neighbor_tile.rotate_90()
+		TileRotation.ROTATE_180:
+			for i in 2:
+				neighbor_tile.rotate_90()
+		TileRotation.ROTATE_270:
+			for i in 3:
+				neighbor_tile.rotate_90()
+	var side
+	var offset_pos = neighbor_pos - tile_pos
+	match offset_pos:
+		Vector2i(0, -1):
+			side = Side.TOP
+		Vector2i(1, 0):
+			side = Side.RIGHT
+		Vector2i(0, 1):
+			side = Side.BOTTOM
+		Vector2i(-1, 0):
+			side = Side.LEFT
+	if tile.is_connectable(neighbor_tile, side):
+		return true
+	return false
+
+
+static func is_connectable_pos(tile_pos: Vector2i, neighbor_pos: Vector2i, dungeon: TileMapLayer) -> bool:
+	var tile := create_from_id(dungeon.get_cell_source_id(tile_pos))
+	match dungeon.get_cell_alternative_tile(tile_pos):
+		TileRotation.ROTATE_90:
+			tile.rotate_90()
+		TileRotation.ROTATE_180:
+			for i in 2:
+				tile.rotate_90()
+		TileRotation.ROTATE_270:
+			for i in 3:
+				tile.rotate_90()
+
+	if is_connectable_tile_pos(tile, tile_pos, neighbor_pos, dungeon):
+		return true
 	return false
