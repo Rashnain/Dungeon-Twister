@@ -32,6 +32,7 @@ static var back_button : Button
 var button_value
 var player_playing := -1
 var max_movement: int
+var card_id: int
 var state := State.NEXT_PLAYER
 var custom_cell_data := {}
 
@@ -162,12 +163,41 @@ func _process(_delta: float) -> void:
 	if state == State.CHOOSING_PLAYER:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
-		for pawn in GD.players_pawns:
-			if pawn.pos == tile_mouse:
-				color_overlay.color = Color("00ff007f")
-			else:
-				color_overlay.color = Color("ffffff7f")
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
+		for i in len(GD.players_pawns):
+			var pawn := GD.players_pawns[i]
+			if i != player_playing and pawn.position == dungeon_back.map_to_local(tile_mouse):
+				color_overlay.color = Color("00ff007f")
+				if Input.is_action_just_pressed("left_click"):
+					match card_id:
+						0:
+							var pos := pawn.position
+							pawn.position = GD.players_pawns[player_playing].position
+							GD.players_pawns[player_playing].position = pos
+							instructions.text += "\n - They exchange position with Player %d" % [i+1]
+						1:
+							GD.players_skip_next_turn[i] = true
+							instructions.text += "\n - They skipped Player %d's next turn" % [i+1]
+						2:
+							var money: int = min(GD.players_money[i], 3)
+							GD.players_money[i] -= money
+							GD.players_money[player_playing] += money
+							instructions.text += "\n - They have stolen %d coin(s) from Player %d" % [money, i+1]
+						3:
+							instructions.text += "\n - [TODO] push card"
+						4:
+							if GD.players_cards[i].is_empty():
+								instructions.text += "\n - They tried to steal Player %d\n    but they don't have any card..." % i
+							else:
+								var index := randi_range(1, len(GD.players_cards[i]))
+								GD.players_cards[player_playing].append(GD.players_cards[i].pop_at(index-1))
+								instructions.text += "\n - They stole a card from Player %d" % [i+1]
+					color_overlay.visible = false
+					update_stats()
+					state = State.NEXT_PLAYER
+				break
+			else:
+				color_overlay.color = Color("ff00007f")
 
 	#  Placing a tile
 	if state == State.PLACING_TILE:
@@ -213,11 +243,30 @@ func _process(_delta: float) -> void:
 	if state == State.CHOOSING_CARD:
 		Card.create_buttons(player_playing, camera, self)
 		await button_pressed
-		var card_id = GD.players_cards[player_playing][int(button_value)]
+		card_id = GD.players_cards[player_playing][int(button_value)]
+		match card_id:
+			0, 1, 2, 3, 4:
+				state = State.CHOOSING_PLAYER
+			5:
+				GD.players_can_cancel_traps[player_playing] = true
+				instructions.text += "\n - They activate a trap canceller"
+				state = State.NEXT_PLAYER
+			6:
+				GD.players_has_treasure_boost[player_playing] = true
+				instructions.text += "\n - They activate a treasure booster"
+				state = State.NEXT_PLAYER
+			7:
+				instructions.text += "\n - [TODO] insight card"
+				state = State.NEXT_PLAYER
+			8:
+				instructions.text += "\n - [TODO] goblin card"
+				state = State.NEXT_PLAYER
+			9:
+				instructions.text += "\n - [TODO] switch tile card"
+				state = State.NEXT_PLAYER
 		GD.players_cards[player_playing].remove_at(int(button_value))
 		Card.remove_buttons()
 		update_stats()
-		state = State.NEXT_PLAYER
 
 	#  Choosing a tile
 	if state == State.CHOOSING_TILE:
@@ -257,6 +306,11 @@ func update_stats() -> void:
 func generate_treasure():
 	var coins: int
 	var cards: int
+	var multiplier := 1
+	if GD.players_has_treasure_boost[player_playing]:
+		instructions.text += "\n - They use their treasure boost !"
+		multiplier = 2
+		GD.players_has_treasure_boost[player_playing] = false
 	match randi_range(1, 6):
 		1:
 			coins = 1
@@ -276,29 +330,41 @@ func generate_treasure():
 		6:
 			coins = 5
 			cards = 2
-	GD.players_money[player_playing] += coins
-	for i in cards:
+	GD.players_money[player_playing] += coins * multiplier
+	for i in cards * multiplier:
 		GD.draw_card(player_playing)
-	instructions.text += "\n - Treasure : %d coin(s) %d card(s)" % [coins, cards]
+	instructions.text += "\n - Treasure : %d coin(s) %d card(s)" % [coins*multiplier, cards*multiplier]
 	update_stats()
 
 
 func tile_effect(id: int) -> void:
-	if id == 0 or id == 5: return
+	if id < 1 or id == 5: return
+	if GD.players_can_cancel_traps[player_playing]:
+		instructions.text += "\n - Their trap canceller prevent the trap !"
+		GD.players_can_cancel_traps[player_playing] = false
+		update_stats()
+		return
 	match id:
 		1:
-			GD.players_tiles[player_playing].pop_at(randi_range(0, len(GD.players_tiles[player_playing])-1))
-			instructions.text += "\n - One of their tiles were taken by a demon !"
+			if len(GD.players_tiles[player_playing]):
+				GD.players_tiles[player_playing].pop_at(randi_range(0, len(GD.players_tiles[player_playing])-1))
+				instructions.text += "\n - One of their tiles were taken by a demon !"
+			else:
+				instructions.text += "\n - They accountered a demon but\n    nothing happened"
 		2:
-			GD.players_cards[player_playing].pop_at(randi_range(0, len(GD.players_cards[player_playing])-1))
-			instructions.text += "\n - They got trapped in spikes and lost a card !"
+			if len(GD.players_cards[player_playing]):
+				GD.players_cards[player_playing].pop_at(randi_range(0, len(GD.players_cards[player_playing])-1))
+				instructions.text += "\n - They got trapped in spikes and lost a card !"
+			else:
+				instructions.text += "\n - They got trapped in spikes but\n    nothing happened"
 		3:
 			GD.players_skip_next_turn[player_playing] = true
 			instructions.text += "\n - They got lost in a infinte tunnel !"
 		4:
-			if GD.players_money[player_playing] > 1:
-				GD.players_money[player_playing] -= 2
-			instructions.text += "\n - A goblin robbed them 2 coins !"
+			var money = min(GD.players_money[player_playing], 2)
+			if GD.players_money[player_playing]:
+				GD.players_money[player_playing] -= money
+			instructions.text += "\n - A goblin robbed them %d coins !" % money
 	state = State.NEXT_PLAYER
 	end_turn_button.visible = false
 	color_overlay.visible = false
