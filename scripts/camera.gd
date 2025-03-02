@@ -5,12 +5,17 @@ var target_position: Vector2 = position
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseMotion:
-		if Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
+			and not Game.is_mouse_over_a_button():
+		if event.pressed:
 			Input.set_default_cursor_shape(Input.CursorShape.CURSOR_MOVE)
-			target_position -= event.relative
 		else:
+			print(Game.is_mouse_over_a_button())
 			Input.set_default_cursor_shape()
+
+	if event is InputEventMouseMotion:
+		if Input.get_current_cursor_shape() == Input.CursorShape.CURSOR_MOVE:
+			target_position -= event.relative
 
 
 func _process(delta: float) -> void:

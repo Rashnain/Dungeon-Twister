@@ -1,4 +1,4 @@
-extends Node2D
+class_name Game extends Node2D
 
 
 enum TileRotation {
@@ -20,11 +20,12 @@ signal button_pressed
 @onready var camera : Camera2D = $Camera2D
 @onready var stats : Label = %Stats
 @onready var instructions : Label = %Instructions
-@onready var d4_button : Button = %Die4Button
-@onready var d6_button : Button = %Die6Button
-@onready var card_button : Button = %CardButton
-@onready var end_turn_button : Button = %EndTurnButton
-@onready var stop_placing_button : Button = %StopPlacingButton
+static var d4_button : Button
+static var d6_button : Button
+static var card_button : Button
+static var end_turn_button : Button
+static var stop_placing_button : Button
+static var back_button : Button
 @onready var tile_stack_label : Label = %TileStack/Label
 @onready var card_stack_label : Label = %CardStack/Label
 
@@ -36,6 +37,12 @@ var custom_cell_data := {}
 
 
 func _ready() -> void:
+	d4_button = %Die4Button
+	d6_button = %Die6Button
+	card_button = %CardButton
+	end_turn_button = %EndTurnButton
+	stop_placing_button = %StopPlacingButton
+	back_button = %BackButton
 	GD.init_game()
 	tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
 	card_stack_label.text = "%s cards" % len(GD.card_stack)
@@ -225,6 +232,12 @@ func update_stats() -> void:
 		players_str += " [Cancel next trap] " if GD.players_can_cancel_traps[i] else ""
 		players_str += "\n"
 	stats.text = players_str
+
+
+static func is_mouse_over_a_button() -> bool:
+	return d6_button.is_hovered() or d4_button.is_hovered() or \
+		card_button.is_hovered() or end_turn_button.is_hovered() or \
+		stop_placing_button.is_hovered() or back_button.is_hovered()
 
 
 func _on_button_pressed(value: String) -> void:
