@@ -118,30 +118,30 @@ func _process(_delta: float) -> void:
 	if state == State.MOVEMENT:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
-		var data = dungeon_back.get_cell_tile_data(tile_mouse)
-		if data:
+		var pos_diff: Vector2i = dungeon_back.local_to_map(GD.players_pawns[player_playing].position) - tile_mouse
+		if pos_diff.length() == 1:
 			color_overlay.color = Color("00ff007f")
-		else:
-			color_overlay.color = Color("ffffff7f")
-		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
-		if Input.is_action_just_pressed("left_click") and not end_turn_button.is_hovered():
-			var cell_alt := dungeon_front.get_cell_alternative_tile(tile_mouse)
-			if custom_cell_data.has(tile_mouse):
-				var real_id: int = custom_cell_data[tile_mouse]
-				if real_id == 0:
-					dungeon_front.set_cell(tile_mouse)
+			if Input.is_action_just_pressed("left_click") and not end_turn_button.is_hovered():
+				var cell_alt := dungeon_front.get_cell_alternative_tile(tile_mouse)
+				if custom_cell_data.has(tile_mouse):
+					var real_id: int = custom_cell_data[tile_mouse]
+					if real_id == 0:
+						dungeon_front.set_cell(tile_mouse)
+					else:
+						dungeon_front.set_cell(tile_mouse, real_id, Vector2i(0, 0), cell_alt)
+					custom_cell_data.erase(tile_mouse)
+				var pawn = GD.players_pawns[player_playing]
+				pawn.position = dungeon_back.map_to_local(tile_mouse)
+				max_movement -= 1
+				if not max_movement:
+					end_turn_button.visible = false
+					color_overlay.visible = false
+					state = State.NEXT_PLAYER
 				else:
-					dungeon_front.set_cell(tile_mouse, real_id, Vector2i(0, 0), cell_alt)
-				custom_cell_data.erase(tile_mouse)
-			var pawn = GD.players_pawns[player_playing]
-			pawn.position = dungeon_back.map_to_local(tile_mouse)
-			max_movement -= 1
-			if not max_movement:
-				end_turn_button.visible = false
-				color_overlay.visible = false
-				state = State.NEXT_PLAYER
-			else:
-				end_turn_button.visible = true
+					end_turn_button.visible = true
+		else:
+			color_overlay.color = Color("ff00007f")
+		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	# Choosing a player
 	if state == State.CHOOSING_PLAYER:
@@ -160,7 +160,9 @@ func _process(_delta: float) -> void:
 		var tile_id = GD.players_tiles[player_playing][int(button_value)]
 		if Input.is_action_just_pressed("rotate"):
 			texture_overlay_back.rotation_degrees += 90
-		if not dungeon_back.get_cell_tile_data(tile_mouse) and Tile.is_connectable_with_surrounding(tile_id % 5, tile_mouse, int(texture_overlay_back.rotation_degrees / 90), dungeon_back):
+		if not dungeon_back.get_cell_source_id(tile_mouse) != -1 and \
+				Tile.is_connectable_with_surrounding(tile_id % 5, tile_mouse, \
+					int(texture_overlay_back.rotation_degrees / 90), dungeon_back):
 			color_overlay.color = Color("00ff007f")
 			if Input.is_action_just_pressed("left_click"):
 				match int(texture_overlay_back.rotation_degrees) % 360:

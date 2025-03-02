@@ -10,7 +10,6 @@ func _input(event: InputEvent) -> void:
 		if event.pressed:
 			Input.set_default_cursor_shape(Input.CursorShape.CURSOR_MOVE)
 		else:
-			print(Game.is_mouse_over_a_button())
 			Input.set_default_cursor_shape()
 
 	if event is InputEventMouseMotion:
