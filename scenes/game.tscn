@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://c43pfmnt1csbv"]
+[gd_scene load_steps=30 format=3 uid="uid://c43pfmnt1csbv"]
 
 [ext_resource type="Script" path="res://scripts/game.gd" id="1_ldrhe"]
 [ext_resource type="Texture2D" uid="uid://b1uajpwrx8hk6" path="res://assets/tiles/empty_corridor.png" id="3_dcqtx"]
@@ -11,10 +11,11 @@
 [ext_resource type="Texture2D" uid="uid://jjvrcck1e1su" path="res://assets/tiles/spikes.png" id="9_r2w1b"]
 [ext_resource type="Texture2D" uid="uid://cn7spl0xxxrqc" path="res://assets/tiles/tunnel.png" id="10_hcsuh"]
 [ext_resource type="Texture2D" uid="uid://c534a48dhhtbg" path="res://assets/tiles/goblin.png" id="11_e0qhr"]
-[ext_resource type="Texture2D" uid="uid://id62dq2higml" path="res://assets/tiles/treasure.png" id="12_fp4gn"]
+[ext_resource type="Texture2D" uid="uid://drspgcgt32ecs" path="res://assets/tiles/treasure_taken.png" id="12_w6cag"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="13_2b3bx"]
 [ext_resource type="Texture2D" uid="uid://b8n2tthybm8k1" path="res://assets/cards/stack.png" id="13_tarp1"]
 [ext_resource type="Texture2D" uid="uid://cujtgay0sq7br" path="res://assets/tiles/stack.png" id="14_34bmf"]
+[ext_resource type="Script" path="res://scripts/scroll_container.gd" id="14_c80og"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0r761"]
 texture = ExtResource("5_gdwn0")
@@ -74,8 +75,8 @@ texture = ExtResource("11_e0qhr")
 texture_region_size = Vector2i(100, 100)
 0:0/0 = 0
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_d8oqh"]
-texture = ExtResource("12_fp4gn")
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_v5a0t"]
+texture = ExtResource("12_w6cag")
 texture_region_size = Vector2i(100, 100)
 0:0/0 = 0
 
@@ -88,7 +89,7 @@ sources/1 = SubResource("TileSetAtlasSource_esj2g")
 sources/2 = SubResource("TileSetAtlasSource_5v8rc")
 sources/3 = SubResource("TileSetAtlasSource_f2ptr")
 sources/4 = SubResource("TileSetAtlasSource_icg7i")
-sources/5 = SubResource("TileSetAtlasSource_d8oqh")
+sources/5 = SubResource("TileSetAtlasSource_v5a0t")
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_ldrhe")
@@ -133,39 +134,66 @@ offset_top = -350.0
 offset_right = -521.0
 offset_bottom = -275.0
 text = "Player 1 : X coins
-Player 2 : Y coins
-..."
+Player 2 : X coins
+Player 3 : X coins
+Player 4 : X coins
+Player 5 : X coins
+Player 6 : X coins"
 
-[node name="Instructions" type="Label" parent="Camera2D"]
-unique_name_in_owner = true
+[node name="ColorRect" type="ColorRect" parent="Camera2D"]
 offset_left = -650.0
-offset_top = -155.0
-offset_right = -499.0
-offset_bottom = -132.0
-text = "It is Player X to play"
+offset_top = -185.0
+offset_right = -300.0
+offset_bottom = 40.0
+mouse_filter = 2
+color = Color(0.196078, 0.196078, 0.196078, 0.501961)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Camera2D/ColorRect"]
+offset_right = 350.0
+offset_bottom = 225.0
+focus_mode = 2
+horizontal_scroll_mode = 0
+script = ExtResource("14_c80og")
+
+[node name="Instructions" type="Label" parent="Camera2D/ColorRect/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "It is Player X to play
+...
+...
+...
+...
+...
+...
+...
+...
+...
+..."
 
 [node name="Die4Button" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
-visible = false
 offset_left = -650.0
+offset_top = 75.0
 offset_right = -579.0
-offset_bottom = 31.0
+offset_bottom = 106.0
 text = " Roll D4 "
 
 [node name="Die6Button" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
 offset_left = -650.0
+offset_top = 75.0
 offset_right = -579.0
-offset_bottom = 31.0
+offset_bottom = 106.0
 text = " Roll D6 "
 
 [node name="CardButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
 offset_left = -569.0
+offset_top = 75.0
 offset_right = -468.0
-offset_bottom = 31.0
+offset_bottom = 106.0
 text = " Play a card "
 
 [node name="EndTurnButton" type="Button" parent="Camera2D"]

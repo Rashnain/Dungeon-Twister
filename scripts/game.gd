@@ -43,6 +43,7 @@ func _ready() -> void:
 	end_turn_button = %EndTurnButton
 	stop_placing_button = %StopPlacingButton
 	back_button = %BackButton
+	instructions.text = ""
 	GD.init_game()
 	tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
 	card_stack_label.text = "%s cards" % len(GD.card_stack)
@@ -53,16 +54,21 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if state == State.DICE or state == State.CHOOSING_CARD or state == State.CHOOSING_TILE: return
+	if state in [State.DICE, State.CHOOSING_CARD, State.CHOOSING_TILE]: return
 
 	if state == State.NEXT_PLAYER:
 		player_playing = (player_playing + 1) % GD.nr_players
-		state = State.DICE
+		if instructions.text != "":
+			instructions.text += "\n\n"
+		if GD.players_skip_next_turn[player_playing]:
+			instructions.text += "Player %d's turn is skiped." % [player_playing+1]
+			GD.players_skip_next_turn[player_playing] = false
+		else:
+			instructions.text += "It is Player %d's turn\n" % [player_playing+1]
+			state = State.DICE
 
 	# Dice rolling
 	if state == State.DICE:
-		instructions.text = "It is Player %d's turn\n" % [player_playing+1]
-		if not GD.players_skip_next_turn[player_playing]:
 			# Tiles / cards
 			d6_button.visible = true
 			await button_pressed
@@ -89,6 +95,7 @@ func _process(_delta: float) -> void:
 					for j in 1:
 						GD.draw_tile(player_playing)
 					instructions.text += "They got 1 tile"
+			update_stats()
 			if len(GD.tile_stack) > 0:
 				tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
 			else:
@@ -131,6 +138,8 @@ func _process(_delta: float) -> void:
 						if real_id == 0:
 							dungeon_front.set_cell(tile_mouse)
 						else:
+							if real_id == 5:
+								generate_treasure()
 							dungeon_front.set_cell(tile_mouse, real_id, Vector2i(0, 0), cell_alt)
 						custom_cell_data.erase(tile_mouse)
 					var pawn = GD.players_pawns[player_playing]
@@ -143,6 +152,7 @@ func _process(_delta: float) -> void:
 						state = State.NEXT_PLAYER
 					else:
 						end_turn_button.visible = true
+					tile_effect(dungeon_front.get_cell_source_id(tile_mouse))
 		else:
 			color_overlay.color = Color("ff00007f")
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
@@ -181,6 +191,7 @@ func _process(_delta: float) -> void:
 				dungeon_front.set_cell(tile_mouse, 0, Vector2i(0, 0))
 				custom_cell_data[tile_mouse] = int(tile_id / 5)
 				GD.players_tiles[player_playing].remove_at(int(button_value))
+				update_stats()
 				texture_overlay_back.visible = false
 				texture_overlay_front.visible = false
 				if GD.players_tiles[player_playing].is_empty():
@@ -204,6 +215,7 @@ func _process(_delta: float) -> void:
 		var card_id = GD.players_cards[player_playing][int(button_value)]
 		GD.players_cards[player_playing].remove_at(int(button_value))
 		Card.remove_buttons()
+		update_stats()
 		state = State.NEXT_PLAYER
 
 	#  Choosing a tile
@@ -233,11 +245,63 @@ func update_stats() -> void:
 	var players_str = ""
 	for i in GD.nr_players:
 		players_str += "Player %d : %d coins" % [i+1, GD.players_money[i]]
+		players_str += " / %d tile(s) / %d card(s)" % [len(GD.players_tiles[i]), len(GD.players_cards[i])]
 		players_str += " [Skip next turn] " if GD.players_skip_next_turn[i] else ""
 		players_str += " [Treasure boost] " if GD.players_has_treasure_boost[i] else ""
 		players_str += " [Cancel next trap] " if GD.players_can_cancel_traps[i] else ""
 		players_str += "\n"
 	stats.text = players_str
+
+
+func generate_treasure():
+	var coins: int
+	var cards: int
+	match randi_range(1, 6):
+		1:
+			coins = 1
+			cards = 1
+		2:
+			coins = 3
+			cards = 0
+		3:
+			coins = 0
+			cards = 2
+		4:
+			coins = 2
+			cards = 1
+		5:
+			coins = 5
+			cards = 0
+		6:
+			coins = 5
+			cards = 2
+	GD.players_money[player_playing] += coins
+	for i in cards:
+		GD.draw_card(player_playing)
+	instructions.text += "\nTreasure : %d coin(s) %d card(s)" % [coins, cards]
+	update_stats()
+
+
+func tile_effect(id: int) -> void:
+	if id == 0 or id == 5: return
+	match id:
+		1:
+			GD.players_tiles[player_playing].pop_at(randi_range(0, len(GD.players_tiles[player_playing])-1))
+			instructions.text += "\nOne of their tiles were taken by a demon !"
+		2:
+			GD.players_cards[player_playing].pop_at(randi_range(0, len(GD.players_cards[player_playing])-1))
+			instructions.text += "\nThey got trapped in spikes and lost a card !"
+		3:
+			GD.players_skip_next_turn[player_playing] = true
+			instructions.text += "\nThey got lost in a infinte tunnel !"
+		4:
+			GD.players_money[player_playing] -= 2
+			instructions.text += "\nA goblin robbed them 2 coins !"
+	state = State.NEXT_PLAYER
+	end_turn_button.visible = false
+	color_overlay.visible = false
+	GD.players_pawns[player_playing].modulate = Color("ffffff")
+	update_stats()
 
 
 static func is_mouse_over_a_button() -> bool:
