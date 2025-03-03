@@ -35,4 +35,11 @@ func is_mouse_over_a_button() -> bool:
 	for button: BaseButton in get_tree().root.find_children("*", "BaseButton", true, false):
 		if button.is_hovered():
 			return true
+
+	var scrollbar_size: Vector2 = %ScrollContainer.size
+	var scrollbar_pos: Vector2 = %ScrollContainer.global_position
+	scrollbar_pos.x += scrollbar_size.x - 8
+	if Rect2(scrollbar_pos, Vector2(8, scrollbar_size.y)).has_point(get_global_mouse_position()):
+		return true
+
 	return false
