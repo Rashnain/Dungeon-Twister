@@ -6,9 +6,8 @@ var pressed: bool = false
 
 
 func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT \
-			and not is_mouse_over_a_button():
-		if event.pressed:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed and not is_mouse_over_a_button():
 			pressed = true
 			Input.set_default_cursor_shape(Input.CursorShape.CURSOR_MOVE)
 		else:
