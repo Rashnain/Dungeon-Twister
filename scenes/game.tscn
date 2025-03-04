@@ -15,7 +15,6 @@
 [ext_resource type="Script" uid="uid://b6q88hglkkqvu" path="res://scripts/camera.gd" id="13_2b3bx"]
 [ext_resource type="Texture2D" uid="uid://b8n2tthybm8k1" path="res://assets/cards/stack.png" id="13_tarp1"]
 [ext_resource type="Texture2D" uid="uid://cujtgay0sq7br" path="res://assets/tiles/stack.png" id="14_34bmf"]
-[ext_resource type="Script" uid="uid://ci0go66ew4rr7" path="res://scripts/scroll_container.gd" id="14_c80og"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0r761"]
 texture = ExtResource("5_gdwn0")
@@ -91,6 +90,19 @@ sources/3 = SubResource("TileSetAtlasSource_f2ptr")
 sources/4 = SubResource("TileSetAtlasSource_icg7i")
 sources/5 = SubResource("TileSetAtlasSource_v5a0t")
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ir15t"]
+bg_color = Color(0.196078, 0.196078, 0.196078, 0.501961)
+border_width_left = 5
+border_width_top = 3
+border_width_right = 5
+border_width_bottom = 3
+border_color = Color(0.247059, 0.247059, 0.247059, 1)
+border_blend = true
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [node name="Game" type="Node2D"]
 script = ExtResource("1_ldrhe")
 
@@ -140,26 +152,14 @@ Player 4 : X coins
 Player 5 : X coins
 Player 6 : X coins"
 
-[node name="ColorRect" type="ColorRect" parent="Camera2D"]
+[node name="Instructions" type="RichTextLabel" parent="Camera2D"]
+unique_name_in_owner = true
 offset_left = -635.0
 offset_top = -185.0
-offset_right = -285.0
+offset_right = -275.0
 offset_bottom = 45.0
-color = Color(0.196078, 0.196078, 0.196078, 0.501961)
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Camera2D/ColorRect"]
-unique_name_in_owner = true
-layout_mode = 0
-offset_right = 350.0
-offset_bottom = 230.0
-focus_mode = 2
-horizontal_scroll_mode = 0
-script = ExtResource("14_c80og")
-
-[node name="Instructions" type="Label" parent="Camera2D/ColorRect/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "It is Player X to play
+theme_override_styles/normal = SubResource("StyleBoxFlat_ir15t")
+text = "...
 ...
 ...
 ...
@@ -170,6 +170,8 @@ text = "It is Player X to play
 ...
 ...
 ..."
+scroll_following = true
+autowrap_mode = 0
 
 [node name="Die4Button" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
