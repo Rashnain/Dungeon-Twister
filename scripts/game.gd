@@ -33,6 +33,7 @@ var player_playing := -1
 var max_movement: int
 var card_id: int
 var state := State.NEXT_PLAYER
+var turn := 0
 var custom_cell_data := {}
 
 
@@ -55,6 +56,9 @@ func _process(_delta: float) -> void:
 		player_playing = (player_playing + 1) % GD.nr_players
 		if instructions.text != "":
 			instructions.text += "\n\n"
+		if player_playing == 0:
+			turn += 1
+			instructions.text += "----- Turn %d -----\n\n" % turn
 		if GD.players_skip_next_turn[player_playing]:
 			instructions.text += "Player %d turn is skiped." % [player_playing+1]
 			GD.players_skip_next_turn[player_playing] = false
