@@ -169,7 +169,13 @@ func _process(_delta: float) -> void:
 							GD.players_money[player_playing] += money
 							instructions.text += "\n - They have stolen %d coin(s) from Player %d" % [money, i+1]
 						3:
-							instructions.text += "\n - [TODO] push card"
+							var valid_pos: Array[Vector2i] = []
+							for pos in dungeon_back.get_surrounding_cells(tile_mouse):
+								if Tile.is_connectable_pos(pos, tile_mouse, dungeon_back):
+									valid_pos.append(pos)
+							pawn.position = dungeon_back.map_to_local(valid_pos[randi_range(0, len(valid_pos)-1)])
+							instructions.text += "\n - They pushed Player %d !" % [i+1]
+							reveal_tile(i)
 						4:
 							if GD.players_cards[i].is_empty():
 								instructions.text += "\n - They tried to steal Player %d\n    but they don't have any card..." % i
