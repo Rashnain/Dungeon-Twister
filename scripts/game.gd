@@ -59,7 +59,7 @@ func _process(_delta: float) -> void:
 			GD.players_skip_next_turn[player_playing] = false
 			update_stats()
 		else:
-			instructions.text += "It is Player %d turn :\n" % [player_playing+1]
+			instructions.text += "It is Player %d turn :" % [player_playing+1]
 			state = State.DICE
 
 	# Dice rolling
@@ -73,23 +73,23 @@ func _process(_delta: float) -> void:
 				1:
 					for j in 1:
 						GD.draw_card(player_playing)
-					instructions.text += " - They got 1 card"
+					instructions.text += "\n - They got 1 card"
 				2:
 					for j in 2:
 						GD.draw_card(player_playing)
-					instructions.text += " - They got 2 cards"
+					instructions.text += "\n - They got 2 cards"
 				3:
 					for j in 2:
 						GD.draw_tile(player_playing)
-					instructions.text += " - They got 2 tiles"
+					instructions.text += "\n - They got 2 tiles"
 				4:
 					for j in 3:
 						GD.draw_tile(player_playing)
-					instructions.text += " - They got 3 tiles"
+					instructions.text += "\n - They got 3 tiles"
 				_:
 					for j in 1:
 						GD.draw_tile(player_playing)
-					instructions.text += " - They got 1 tile"
+					instructions.text += "\n - They got 1 tile"
 			update_stats()
 			if len(GD.tile_stack) > 1:
 				tile_stack_label.text = "%d tiles" % len(GD.tile_stack)
