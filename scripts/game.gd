@@ -91,14 +91,14 @@ func _process(_delta: float) -> void:
 						GD.draw_tile(player_playing)
 					instructions.text += " - They got 1 tile"
 			update_stats()
-			if len(GD.tile_stack) > 0:
-				tile_stack_label.text = "%s tiles" % len(GD.tile_stack)
+			if len(GD.tile_stack) > 1:
+				tile_stack_label.text = "%d tiles" % len(GD.tile_stack)
 			else:
-				tile_stack_label.text = "1 tile"
-			if len(GD.card_stack) > 0:
-				card_stack_label.text = "%s cards" % len(GD.card_stack)
+				tile_stack_label.text = "%d tile" % len(GD.card_stack)
+			if len(GD.card_stack) > 1:
+				card_stack_label.text = "%d cards" % len(GD.card_stack)
 			else:
-				card_stack_label.text = "1 card"
+				card_stack_label.text = "%d card" % len(GD.card_stack)
 			# Movement
 			d4_button.visible = true
 			if len(GD.players_cards[player_playing]) > 0:
