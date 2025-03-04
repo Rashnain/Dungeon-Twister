@@ -127,16 +127,6 @@ func _process(_delta: float) -> void:
 			if Tile.is_connectable_pos(pawn_tile, tile_mouse, dungeon_back):
 				color_overlay.color = Color("00ff007f")
 				if Input.is_action_just_pressed("left_click") and not end_turn_button.is_hovered():
-					var cell_alt := dungeon_front.get_cell_alternative_tile(tile_mouse)
-					if custom_cell_data.has(tile_mouse):
-						var real_id: int = custom_cell_data[tile_mouse]
-						if real_id == 0:
-							dungeon_front.set_cell(tile_mouse)
-						else:
-							if real_id == 5:
-								generate_treasure()
-							dungeon_front.set_cell(tile_mouse, real_id, Vector2i(0, 0), cell_alt)
-						custom_cell_data.erase(tile_mouse)
 					var pawn = GD.players_pawns[player_playing]
 					pawn.position = dungeon_back.map_to_local(tile_mouse)
 					max_movement -= 1
@@ -147,7 +137,7 @@ func _process(_delta: float) -> void:
 						state = State.NEXT_PLAYER
 					else:
 						end_turn_button.visible = true
-					tile_effect(dungeon_front.get_cell_source_id(tile_mouse))
+					reveal_tile(player_playing)
 		else:
 			color_overlay.color = Color("ff00007f")
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
@@ -168,6 +158,8 @@ func _process(_delta: float) -> void:
 							pawn.position = GD.players_pawns[player_playing].position
 							GD.players_pawns[player_playing].position = pos
 							instructions.text += "\n - They exchange position with Player %d" % [i+1]
+							reveal_tile(player_playing)
+							reveal_tile(i)
 						1:
 							GD.players_skip_next_turn[i] = true
 							instructions.text += "\n - They skipped Player %d's next turn" % [i+1]
@@ -330,38 +322,69 @@ func generate_treasure() -> void:
 	update_stats()
 
 
-func tile_effect(id: int) -> void:
+func reveal_tile(player_id: int) -> void:
+	var pawn_pos := dungeon_back.local_to_map(GD.players_pawns[player_id].position)
+	var cell_alt := dungeon_front.get_cell_alternative_tile(pawn_pos)
+	if custom_cell_data.has(pawn_pos):
+		var real_id: int = custom_cell_data[pawn_pos]
+		if real_id == 0:
+			dungeon_front.set_cell(pawn_pos)
+		else:
+			if real_id == 5:
+				generate_treasure()
+			dungeon_front.set_cell(pawn_pos, real_id, Vector2i(0, 0), cell_alt)
+		custom_cell_data.erase(pawn_pos)
+	var id := dungeon_front.get_cell_source_id(pawn_pos)
 	if id < 1 or id == 5: return
-	if GD.players_can_cancel_traps[player_playing]:
+	if GD.players_can_cancel_traps[player_id]:
 		instructions.text += "\n - Their trap canceller prevent the trap !"
-		GD.players_can_cancel_traps[player_playing] = false
+		GD.players_can_cancel_traps[player_id] = false
 		update_stats()
 		return
 	match id:
 		1:
-			if len(GD.players_tiles[player_playing]):
-				GD.players_tiles[player_playing].pop_at(randi_range(0, len(GD.players_tiles[player_playing])-1))
-				instructions.text += "\n - One of their tiles were taken by a demon !"
+			if len(GD.players_tiles[player_id]):
+				GD.players_tiles[player_id].pop_at(randi_range(0, len(GD.players_tiles[player_id])-1))
+				if player_id == player_playing:
+					instructions.text += "\n - One of their tiles were taken by a demon !"
+				else:
+					instructions.text += "\n - One of Player %d tiles were taken by a demon !" % [player_id+1]
 			else:
-				instructions.text += "\n - They accountered a demon but\n    nothing happened"
+				if player_id == player_playing:
+					instructions.text += "\n - They accountered a demon but\n    nothing happened"
+				else:
+					instructions.text += "\n - Player %d accountered a demon but\n    nothing happened" % [player_id+1]
 		2:
-			if len(GD.players_cards[player_playing]):
-				GD.players_cards[player_playing].pop_at(randi_range(0, len(GD.players_cards[player_playing])-1))
-				instructions.text += "\n - They got trapped in spikes and lost a card !"
+			if len(GD.players_cards[player_id]):
+				GD.players_cards[player_id].pop_at(randi_range(0, len(GD.players_cards[player_id])-1))
+				if player_id == player_playing:
+					instructions.text += "\n - They got trapped in spikes and lost a card !"
+				else:
+					instructions.text += "\n - Player %d got trapped in spikes and lost a card !" % [player_id+1]
 			else:
-				instructions.text += "\n - They got trapped in spikes but\n    nothing happened"
+				if player_id == player_playing:
+					instructions.text += "\n - They got trapped in spikes but\n    nothing happened"
+				else:
+					instructions.text += "\n - Player %d got trapped in spikes but\n    nothing happened" % [player_id+1]
 		3:
-			GD.players_skip_next_turn[player_playing] = true
-			instructions.text += "\n - They got lost in a infinte tunnel !"
+			GD.players_skip_next_turn[player_id] = true
+			if player_id == player_playing:
+				instructions.text += "\n - They got lost in a infinte tunnel !"
+			else:
+					instructions.text += "\n - Player %d got lost in a infinte tunnel !" % [player_id+1]
 		4:
-			var money = min(GD.players_money[player_playing], 2)
-			if GD.players_money[player_playing]:
-				GD.players_money[player_playing] -= money
-			instructions.text += "\n - A goblin robbed them %d coins !" % money
-	state = State.NEXT_PLAYER
-	end_turn_button.visible = false
-	color_overlay.visible = false
-	GD.players_pawns[player_playing].modulate = Color("ffffff")
+			var money = min(GD.players_money[player_id], 2)
+			if GD.players_money[player_id]:
+				GD.players_money[player_id] -= money
+			if player_id == player_playing:
+				instructions.text += "\n - A goblin robbed them %d coins !" % money
+			else:
+					instructions.text += "\n - A goblin robbed %d coins of Player %d !" % [money, player_id+1]
+	if player_id == player_playing:
+		state = State.NEXT_PLAYER
+		end_turn_button.visible = false
+		color_overlay.visible = false
+		GD.players_pawns[player_id].modulate = Color("ffffff")
 	update_stats()
 
 
