@@ -51,6 +51,7 @@ func _process(_delta: float) -> void:
 	if state in [State.DICE, State.CHOOSING_CARD, State.CHOOSING_TILE]: return
 
 	if state == State.NEXT_PLAYER:
+		GD.players_pawns[player_playing].modulate = Color("ffffff")
 		player_playing = (player_playing + 1) % GD.nr_players
 		if instructions.text != "":
 			instructions.text += "\n\n"
@@ -60,6 +61,7 @@ func _process(_delta: float) -> void:
 			update_stats()
 		else:
 			instructions.text += "It is Player %d turn :" % [player_playing+1]
+			GD.players_pawns[player_playing].modulate = Color("ff0000")
 			state = State.DICE
 
 	# Dice rolling
@@ -119,7 +121,6 @@ func _process(_delta: float) -> void:
 	# Movement
 	if state == State.MOVEMENT:
 		color_overlay.visible = true
-		GD.players_pawns[player_playing].modulate = Color("ff0000")
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		var pawn_tile := dungeon_back.local_to_map(GD.players_pawns[player_playing].position)
 		var pos_diff: Vector2i = pawn_tile - tile_mouse
@@ -133,7 +134,6 @@ func _process(_delta: float) -> void:
 					if not max_movement:
 						end_turn_button.visible = false
 						color_overlay.visible = false
-						GD.players_pawns[player_playing].modulate = Color("ffffff")
 						state = State.NEXT_PLAYER
 					else:
 						end_turn_button.visible = true
