@@ -8,7 +8,8 @@ enum TileRotation {
 	ROTATE_270 = TileSetAtlasSource.TRANSFORM_TRANSPOSE | TileSetAtlasSource.TRANSFORM_FLIP_V,
 }
 
-enum State { NEXT_PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSING_CARD, CHOOSING_TILE }
+enum State { NEXT_PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSING_CARD,
+			CHOOSING_TILE, GOBLIN_CARD, INSIGHT_CARD, SWITCH_TILE_CARD }
 
 signal button_pressed
 
@@ -255,8 +256,10 @@ func _process(_delta: float) -> void:
 				instructions.text += "\n - [TODO] insight card"
 				state = State.NEXT_PLAYER
 			8:
-				instructions.text += "\n - [TODO] goblin card"
-				state = State.NEXT_PLAYER
+				texture_overlay_front.texture = load("res://assets/tiles/goblin.png")
+				texture_overlay_front.visible = true
+				color_overlay.visible = true
+				state = State.GOBLIN_CARD
 			9:
 				instructions.text += "\n - [TODO] switch tile card"
 				state = State.NEXT_PLAYER
@@ -285,6 +288,27 @@ func _process(_delta: float) -> void:
 			texture_overlay_front.visible = true
 			color_overlay.visible = true
 			state = State.PLACING_TILE
+
+	if state == State.GOBLIN_CARD:
+		var mouse_tile = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
+		if dungeon_front.get_cell_source_id(mouse_tile) == -1:
+			color_overlay.color = Color("00ff007f")
+			if Input.is_action_just_pressed("left_click"):
+				dungeon_front.set_cell(mouse_tile, 4, Vector2i(0, 0))
+				instructions.text += "\n - They spawned a goblin in the dungeon !"
+				if GM.players_pawns[player_playing].position == dungeon_front.map_to_local(mouse_tile):
+					reveal_tile(player_playing)
+				for i in len(GM.players_pawns):
+					if i == player_playing: continue
+					if GM.players_pawns[i].position == dungeon_front.map_to_local(mouse_tile):
+						reveal_tile(i)
+				texture_overlay_front.visible = false
+				color_overlay.visible = false
+				state = State.NEXT_PLAYER
+		else:
+			color_overlay.color = Color("ff00007f")
+		texture_overlay_front.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
+		color_overlay.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
 
 
 func update_stats() -> void:
@@ -332,8 +356,8 @@ func generate_treasure() -> void:
 	update_stats()
 
 
-func reveal_tile(player_id: int) -> void:
-	var pawn_pos := dungeon_back.local_to_map(GM.players_pawns[player_id].position)
+func reveal_tile(player_index: int) -> void:
+	var pawn_pos := dungeon_back.local_to_map(GM.players_pawns[player_index].position)
 	var cell_alt := dungeon_front.get_cell_alternative_tile(pawn_pos)
 	if custom_cell_data.has(pawn_pos):
 		var real_id: int = custom_cell_data[pawn_pos]
@@ -346,55 +370,55 @@ func reveal_tile(player_id: int) -> void:
 		custom_cell_data.erase(pawn_pos)
 	var id := dungeon_front.get_cell_source_id(pawn_pos)
 	if id < 1 or id == 5: return
-	if GM.players_can_cancel_traps[player_id]:
+	if GM.players_can_cancel_traps[player_index]:
 		instructions.text += "\n - Their trap canceller prevent the trap !"
-		GM.players_can_cancel_traps[player_id] = false
+		GM.players_can_cancel_traps[player_index] = false
 		update_stats()
 		return
 	match id:
 		1:
-			if len(GM.players_tiles[player_id]):
-				GM.players_tiles[player_id].pop_at(randi_range(0, len(GM.players_tiles[player_id])-1))
-				if player_id == player_playing:
+			if len(GM.players_tiles[player_index]):
+				GM.players_tiles[player_index].pop_at(randi_range(0, len(GM.players_tiles[player_index])-1))
+				if player_index == player_playing:
 					instructions.text += "\n - One of their tiles were taken by a demon !"
 				else:
-					instructions.text += "\n - One of Player %d tiles were taken by a demon !" % [player_id+1]
+					instructions.text += "\n - One of Player %d tiles were taken by a demon !" % [player_index+1]
 			else:
-				if player_id == player_playing:
+				if player_index == player_playing:
 					instructions.text += "\n - They accountered a demon but nothing happened"
 				else:
-					instructions.text += "\n - Player %d accountered a demon but nothing happened" % [player_id+1]
+					instructions.text += "\n - Player %d accountered a demon but nothing happened" % [player_index+1]
 		2:
-			if len(GM.players_cards[player_id]):
-				GM.players_cards[player_id].pop_at(randi_range(0, len(GM.players_cards[player_id])-1))
-				if player_id == player_playing:
+			if len(GM.players_cards[player_index]):
+				GM.players_cards[player_index].pop_at(randi_range(0, len(GM.players_cards[player_index])-1))
+				if player_index == player_playing:
 					instructions.text += "\n - They got trapped in spikes and lost a card !"
 				else:
-					instructions.text += "\n - Player %d got trapped in spikes and lost a card !" % [player_id+1]
+					instructions.text += "\n - Player %d got trapped in spikes and lost a card !" % [player_index+1]
 			else:
-				if player_id == player_playing:
+				if player_index == player_playing:
 					instructions.text += "\n - They got trapped in spikes but nothing happened"
 				else:
-					instructions.text += "\n - Player %d got trapped in spikes but nothing happened" % [player_id+1]
+					instructions.text += "\n - Player %d got trapped in spikes but nothing happened" % [player_index+1]
 		3:
-			GM.players_skip_next_turn[player_id] = true
-			if player_id == player_playing:
+			GM.players_skip_next_turn[player_index] = true
+			if player_index == player_playing:
 				instructions.text += "\n - They got lost in a infinte tunnel !"
 			else:
-					instructions.text += "\n - Player %d got lost in a infinte tunnel !" % [player_id+1]
+					instructions.text += "\n - Player %d got lost in a infinte tunnel !" % [player_index+1]
 		4:
-			var money = min(GM.players_money[player_id], 2)
-			if GM.players_money[player_id]:
-				GM.players_money[player_id] -= money
-			if player_id == player_playing:
+			var money = min(GM.players_money[player_index], 2)
+			if GM.players_money[player_index]:
+				GM.players_money[player_index] -= money
+			if player_index == player_playing:
 				instructions.text += "\n - A goblin robbed them %d coins !" % money
 			else:
-					instructions.text += "\n - A goblin robbed %d coins of Player %d !" % [money, player_id+1]
-	if player_id == player_playing:
+					instructions.text += "\n - A goblin robbed %d coins from Player %d !" % [money, player_index+1]
+	if player_index == player_playing:
 		state = State.NEXT_PLAYER
 		end_turn_button.visible = false
 		color_overlay.visible = false
-		GM.players_pawns[player_id].modulate = Color("ffffff")
+		GM.players_pawns[player_index].modulate = Color("ffffff")
 	update_stats()
 
 
