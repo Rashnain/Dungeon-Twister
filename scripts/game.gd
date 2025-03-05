@@ -183,7 +183,7 @@ func _process(_delta: float) -> void:
 							reveal_tile(i)
 						4:
 							if GM.players_cards[i].is_empty():
-								instructions.text += "\n - They tried to steal Player %d\n    but they don't have any card..." % i
+								instructions.text += "\n - They tried to steal Player %d but they don't have any card..." % [i+1]
 							else:
 								var index := randi_range(1, len(GM.players_cards[i]))
 								GM.players_cards[player_playing].append(GM.players_cards[i].pop_at(index-1))
@@ -361,9 +361,9 @@ func reveal_tile(player_id: int) -> void:
 					instructions.text += "\n - One of Player %d tiles were taken by a demon !" % [player_id+1]
 			else:
 				if player_id == player_playing:
-					instructions.text += "\n - They accountered a demon but\n    nothing happened"
+					instructions.text += "\n - They accountered a demon but nothing happened"
 				else:
-					instructions.text += "\n - Player %d accountered a demon but\n    nothing happened" % [player_id+1]
+					instructions.text += "\n - Player %d accountered a demon but nothing happened" % [player_id+1]
 		2:
 			if len(GM.players_cards[player_id]):
 				GM.players_cards[player_id].pop_at(randi_range(0, len(GM.players_cards[player_id])-1))
@@ -373,9 +373,9 @@ func reveal_tile(player_id: int) -> void:
 					instructions.text += "\n - Player %d got trapped in spikes and lost a card !" % [player_id+1]
 			else:
 				if player_id == player_playing:
-					instructions.text += "\n - They got trapped in spikes but\n    nothing happened"
+					instructions.text += "\n - They got trapped in spikes but nothing happened"
 				else:
-					instructions.text += "\n - Player %d got trapped in spikes but\n    nothing happened" % [player_id+1]
+					instructions.text += "\n - Player %d got trapped in spikes but nothing happened" % [player_id+1]
 		3:
 			GM.players_skip_next_turn[player_id] = true
 			if player_id == player_playing:

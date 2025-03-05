@@ -171,7 +171,6 @@ text = "...
 ...
 ..."
 scroll_following = true
-autowrap_mode = 0
 
 [node name="ActionButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
