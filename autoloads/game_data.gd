@@ -1,6 +1,8 @@
 extends Node
 
 
+enum Stack { CARD, TILE }
+
 var nr_players: int
 var players_money: Array[int]
 var players_pawns: Array[Sprite2D]
@@ -65,11 +67,21 @@ func init_game() -> void:
 	tile_stack.shuffle()
 
 
-func draw_card(player_index: int) -> void:
-	if not card_stack.is_empty():
-		players_cards[player_index].append(card_stack.pop_back())
+func draw(player_index: int, type: Stack, amount: int) -> int:
+	var stack: Array[int]
+	var player_hand: Array
 
+	if type == Stack.TILE:
+		stack = tile_stack
+		player_hand = players_tiles[player_index]
+	elif type == Stack.CARD:
+		stack = card_stack
+		player_hand = players_cards[player_index]
 
-func draw_tile(player_index: int) -> void:
-	if not tile_stack.is_empty():
-		players_tiles[player_index].append(tile_stack.pop_back())
+	var len_before := len(player_hand)
+
+	for i in amount:
+		if not stack.is_empty():
+			player_hand.append(stack.pop_back())
+
+	return len(player_hand) - len_before

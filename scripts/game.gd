@@ -75,27 +75,28 @@ func _process(_delta: float) -> void:
 			await button_pressed
 			d6_button.visible = false
 			var die_value := randi_range(1, 6)
+			var type: GD.Stack
+			var amount: int
 			match die_value:
 				1:
-					for j in 1:
-						GD.draw_card(player_playing)
-					instructions.text += "\n - They got 1 card"
+					type = GD.Stack.CARD
+					amount = 2
 				2:
-					for j in 2:
-						GD.draw_card(player_playing)
-					instructions.text += "\n - They got 2 cards"
+					type = GD.Stack.CARD
+					amount = 1
 				3:
-					for j in 2:
-						GD.draw_tile(player_playing)
-					instructions.text += "\n - They got 2 tiles"
+					type = GD.Stack.TILE
+					amount = 3
 				4:
-					for j in 3:
-						GD.draw_tile(player_playing)
-					instructions.text += "\n - They got 3 tiles"
+					type = GD.Stack.TILE
+					amount = 2
 				_:
-					for j in 1:
-						GD.draw_tile(player_playing)
-					instructions.text += "\n - They got 1 tile"
+					type = GD.Stack.TILE
+					amount = 1
+			if type == GD.Stack.TILE:
+				instructions.text += "\n - They got %d tile(s)" % GD.draw(player_playing, type, amount)
+			else:
+				instructions.text += "\n - They got %d card(s)" % GD.draw(player_playing, type, amount)
 			update_stats()
 			if len(GD.tile_stack) > 1:
 				tile_stack_label.text = "%d tiles" % len(GD.tile_stack)
@@ -326,8 +327,7 @@ func generate_treasure() -> void:
 			coins = 5
 			cards = 2
 	GD.players_money[player_playing] += coins * multiplier
-	for i in cards * multiplier:
-		GD.draw_card(player_playing)
+	GD.draw(player_playing, GD.Stack.CARD, cards * multiplier)
 	instructions.text += "\n - Treasure : %d coin(s) %d card(s)" % [coins*multiplier, cards*multiplier]
 	update_stats()
 
