@@ -20,8 +20,8 @@ signal button_pressed
 @onready var camera: Camera2D = $Camera2D
 @onready var stats: Label = %Stats
 @onready var instructions: RichTextLabel = %Instructions
-@onready var d4_button: Button = %Die4Button
-@onready var d6_button: Button = %Die6Button
+@onready var d4_button: Button = %MoveButton
+@onready var d6_button: Button = %ActionButton
 @onready var card_button: Button = %CardButton
 @onready var end_turn_button: Button = %EndTurnButton
 @onready var stop_placing_button: Button = %StopPlacingButton
@@ -94,9 +94,9 @@ func _process(_delta: float) -> void:
 					type = GD.Stack.TILE
 					amount = 1
 			if type == GD.Stack.TILE:
-				instructions.text += "\n - They got %d tile(s)" % GD.draw(player_playing, type, amount)
+				instructions.text += "\n - They rolled a %d and got %d tile(s)" % [die_value, GD.draw(player_playing, type, amount)]
 			else:
-				instructions.text += "\n - They got %d card(s)" % GD.draw(player_playing, type, amount)
+				instructions.text += "\n - They rolled a %d and got %d card(s)" % [die_value, GD.draw(player_playing, type, amount)]
 			update_stats()
 			if len(GD.tile_stack) > 1:
 				tile_stack_label.text = "%d tiles" % len(GD.tile_stack)
@@ -115,7 +115,7 @@ func _process(_delta: float) -> void:
 			card_button.visible = false
 			if str(button_value) == "d4":
 				max_movement = randi_range(1, 4)
-				instructions.text += " and %d move(s)" % [max_movement]
+				instructions.text += "\n - They rolled a %d and got %d move(s)" % [max_movement, max_movement]
 				if len(GD.players_tiles[player_playing]) > 0:
 					state = State.CHOOSING_TILE
 				else:

@@ -173,30 +173,30 @@ text = "...
 scroll_following = true
 autowrap_mode = 0
 
-[node name="Die4Button" type="Button" parent="Camera2D"]
+[node name="ActionButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
 offset_left = -635.0
 offset_top = 75.0
-offset_right = -564.0
+offset_right = -506.0
 offset_bottom = 106.0
-text = " Roll D4 "
+text = " Roll Action Die "
 
-[node name="Die6Button" type="Button" parent="Camera2D"]
+[node name="MoveButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
 offset_left = -635.0
 offset_top = 75.0
-offset_right = -564.0
+offset_right = -472.0
 offset_bottom = 106.0
-text = " Roll D6 "
+text = " Roll Movement Die "
 
 [node name="CardButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 visible = false
-offset_left = -554.0
+offset_left = -467.0
 offset_top = 75.0
-offset_right = -453.0
+offset_right = -366.0
 offset_bottom = 106.0
 text = " Play a card "
 
@@ -220,9 +220,9 @@ text = " Stop placing "
 
 [node name="BackButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
-offset_left = 581.0
+offset_left = 582.0
 offset_top = 324.0
-offset_right = 635.0
+offset_right = 636.0
 offset_bottom = 355.0
 text = " Back "
 
@@ -262,8 +262,8 @@ offset_right = 148.0
 offset_bottom = 220.0
 text = "XX tiles"
 
-[connection signal="pressed" from="Camera2D/Die4Button" to="." method="_on_button_pressed" binds= ["d4"]]
-[connection signal="pressed" from="Camera2D/Die6Button" to="." method="_on_button_pressed" binds= ["d6"]]
+[connection signal="pressed" from="Camera2D/ActionButton" to="." method="_on_button_pressed" binds= ["d6"]]
+[connection signal="pressed" from="Camera2D/MoveButton" to="." method="_on_button_pressed" binds= ["d4"]]
 [connection signal="pressed" from="Camera2D/CardButton" to="." method="_on_button_pressed" binds= ["card"]]
 [connection signal="pressed" from="Camera2D/EndTurnButton" to="." method="_on_button_pressed" binds= ["end_turn"]]
 [connection signal="pressed" from="Camera2D/StopPlacingButton" to="." method="_on_button_pressed" binds= ["stop_placing"]]
