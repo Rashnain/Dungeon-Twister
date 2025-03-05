@@ -67,8 +67,8 @@ static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void:
 	node2d.position = Vector2(-635, 135)
 	camera.add_child(node2d)
 	var x := 0
-	for i in len(GD.players_tiles[id]):
-		var tile_id = GD.players_tiles[id][i]
+	for i in len(GM.players_tiles[id]):
+		var tile_id = GM.players_tiles[id][i]
 		var tile = TextureButton.new()
 		if tile_id < 5:
 			tile.texture_normal = load("res://assets/tiles/%s.png" % [get_background_from_id(tile_id)])
