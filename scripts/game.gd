@@ -53,6 +53,7 @@ func _process(_delta: float) -> void:
 	if state in [State.DICE, State.CHOOSING_CARD, State.CHOOSING_TILE]: return
 
 	if state == State.NEXT_PLAYER:
+		end_turn_button.visible = false
 		GM.players_pawns[player_playing].modulate = Color("ffffff")
 		player_playing = (player_playing + 1) % GM.nr_players
 		if instructions.text != "":
@@ -253,8 +254,11 @@ func _process(_delta: float) -> void:
 				instructions.text += "\n - They activate a treasure booster"
 				state = State.NEXT_PLAYER
 			7:
-				instructions.text += "\n - [TODO] insight card"
-				state = State.NEXT_PLAYER
+				texture_overlay_front.texture = null
+				texture_overlay_front.visible = true
+				color_overlay.visible = true
+				end_turn_button.visible = true
+				state = State.INSIGHT_CARD
 			8:
 				texture_overlay_front.texture = load("res://assets/tiles/goblin.png")
 				texture_overlay_front.visible = true
@@ -309,6 +313,30 @@ func _process(_delta: float) -> void:
 			color_overlay.color = Color("ff00007f")
 		texture_overlay_front.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
 		color_overlay.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
+
+	if state == State.INSIGHT_CARD:
+		var mouse_tile = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
+		if custom_cell_data.has(mouse_tile):
+			color_overlay.color = Color("00ff007f")
+			if Input.is_action_just_pressed("left_click"):
+				var front_tile_id: int = custom_cell_data[mouse_tile]
+				if front_tile_id != 0:
+					texture_overlay_front.texture = load("res://assets/tiles/%s.png" % Tile.get_foreground_from_id(front_tile_id*5))
+				instructions.text += "\n - They used their insight card to see what others can't"
+				dungeon_front.set_cell(mouse_tile)
+				state = State.DICE
+				await get_tree().create_timer(1.0).timeout
+				dungeon_front.set_cell(mouse_tile, 0, Vector2i(0, 0))
+				texture_overlay_front.visible = false
+				color_overlay.visible = false
+				state = State.NEXT_PLAYER
+		else:
+			color_overlay.color = Color("ff00007f")
+		texture_overlay_front.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
+		color_overlay.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
+
+	if state == State.SWITCH_TILE_CARD:
+		pass
 
 
 func update_stats() -> void:

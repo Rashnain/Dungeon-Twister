@@ -203,9 +203,9 @@ text = " Play a card "
 unique_name_in_owner = true
 visible = false
 offset_left = -635.0
-offset_top = 265.0
+offset_top = 301.0
 offset_right = -551.0
-offset_bottom = 296.0
+offset_bottom = 332.0
 text = " End turn "
 
 [node name="StopPlacingButton" type="Button" parent="Camera2D"]
