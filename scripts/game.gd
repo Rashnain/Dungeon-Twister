@@ -9,7 +9,7 @@ enum TileRotation {
 }
 
 enum State { NEXT_PLAYER, DICE, MOVEMENT, CHOOSING_PLAYER, PLACING_TILE, CHOOSING_CARD,
-			CHOOSING_TILE, GOBLIN_CARD, INSIGHT_CARD, SWITCH_TILE_CARD }
+			CHOOSING_TILE, GOBLIN_CARD, INSIGHT_CARD }
 
 signal button_pressed
 
@@ -26,6 +26,7 @@ signal button_pressed
 @onready var card_button: Button = %CardButton
 @onready var end_turn_button: Button = %EndTurnButton
 @onready var stop_placing_button: Button = %StopPlacingButton
+@onready var cancel_placing_button: Button = %CancelPlacingButton
 @onready var tile_stack_label: Label = %TileStack/Label
 @onready var card_stack_label: Label = %CardStack/Label
 
@@ -50,7 +51,7 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if state in [State.DICE, State.CHOOSING_CARD, State.CHOOSING_TILE]: return
+	if state in [State.DICE, State.CHOOSING_CARD]: return
 
 	if state == State.NEXT_PLAYER:
 		end_turn_button.visible = false
@@ -70,7 +71,6 @@ func _process(_delta: float) -> void:
 			GM.players_pawns[player_playing].modulate = Color("ff0000")
 			state = State.DICE
 
-	# Dice rolling
 	if state == State.DICE:
 			# Tiles / cards
 			d6_button.visible = true
@@ -125,7 +125,6 @@ func _process(_delta: float) -> void:
 			elif str(button_value) == "card":
 				state = State.CHOOSING_CARD
 
-	# Movement
 	if state == State.MOVEMENT:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
@@ -149,7 +148,6 @@ func _process(_delta: float) -> void:
 			color_overlay.color = Color("ff00007f")
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
-	# Choosing a player
 	if state == State.CHOOSING_PLAYER:
 		color_overlay.visible = true
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
@@ -197,13 +195,13 @@ func _process(_delta: float) -> void:
 			else:
 				color_overlay.color = Color("ff00007f")
 
-	#  Placing a tile
 	if state == State.PLACING_TILE:
 		var tile_mouse = dungeon_back.local_to_map(dungeon_back.get_local_mouse_position())
 		var tile_id = GM.players_tiles[player_playing][int(button_value)]
 		if Input.is_action_just_pressed("rotate"):
 			texture_overlay_back.rotation_degrees += 90
-		if dungeon_back.get_cell_source_id(tile_mouse) == -1 and \
+		if ((card_id != 9 and dungeon_back.get_cell_source_id(tile_mouse) == -1) or \
+				(card_id == 9 and dungeon_back.get_cell_source_id(tile_mouse) != -1)) and \
 				Tile.is_connectable_with_surrounding(tile_id % 5, tile_mouse, \
 					int(texture_overlay_back.rotation_degrees / 90), dungeon_back):
 			color_overlay.color = Color("00ff007f")
@@ -221,23 +219,40 @@ func _process(_delta: float) -> void:
 				custom_cell_data[tile_mouse] = int(tile_id / 5)
 				GM.players_tiles[player_playing].remove_at(int(button_value))
 				update_stats()
+				if card_id == 9:
+					if GM.players_pawns[player_playing].position == dungeon_front.map_to_local(tile_mouse):
+						reveal_tile(player_playing)
+					for i in len(GM.players_pawns):
+						if i == player_playing: continue
+						if GM.players_pawns[i].position == dungeon_front.map_to_local(tile_mouse):
+							reveal_tile(i)
 				texture_overlay_back.visible = false
 				texture_overlay_front.visible = false
+				cancel_placing_button.visible = false
 				if GM.players_tiles[player_playing].is_empty():
-					state = State.MOVEMENT
+					if card_id == 9:
+						card_id = -1
+						color_overlay.visible = false
+						state = State.NEXT_PLAYER
+					else:
+						state = State.MOVEMENT
 				else:
 					stop_placing_button.visible = true
 					texture_overlay_back.visible = false
 					texture_overlay_front.visible = false
 					color_overlay.visible = false
-					state = State.CHOOSING_TILE
+					if card_id == 9:
+						card_id = -1
+						stop_placing_button.visible = false
+						state = State.NEXT_PLAYER
+					else:
+						state = State.CHOOSING_TILE
 		else:
 			color_overlay.color = Color("ff00007f")
 		texture_overlay_back.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 		texture_overlay_front.position = texture_overlay_back.position
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
-	#  Choosing a card
 	if state == State.CHOOSING_CARD:
 		Card.create_buttons(player_playing, camera, self)
 		await button_pressed
@@ -265,16 +280,20 @@ func _process(_delta: float) -> void:
 				color_overlay.visible = true
 				state = State.GOBLIN_CARD
 			9:
-				instructions.text += "\n - [TODO] switch tile card"
-				state = State.NEXT_PLAYER
+				if len(GM.players_tiles[player_playing]) > 0:
+					state = State.CHOOSING_TILE
+					instructions.text += "\n - They used a switch tile card"
+				else:
+					instructions.text += "\n - They used a switch tile card but they don't have any tile to switch with."
+					state = State.NEXT_PLAYER
 		GM.players_cards[player_playing].remove_at(int(button_value))
 		Card.remove_buttons()
 		update_stats()
 
-	#  Choosing a tile
 	if state == State.CHOOSING_TILE:
 		Tile.create_buttons(player_playing, camera, self)
 		stop_placing_button.visible = true
+		state = State.DICE
 		await button_pressed
 		Tile.remove_buttons()
 		stop_placing_button.visible = false
@@ -282,7 +301,12 @@ func _process(_delta: float) -> void:
 			texture_overlay_back.visible = false
 			texture_overlay_front.visible = false
 			color_overlay.visible = false
-			state = State.MOVEMENT
+			if card_id == 9:
+				card_id = -1
+				instructions.text += " that they cancelled."
+				state = State.NEXT_PLAYER
+			else:
+				state = State.MOVEMENT
 		else:
 			var tile_id = GM.players_tiles[player_playing][int(button_value)]
 			texture_overlay_back.texture = load("res://assets/tiles/%s.png" % [Tile.get_background_from_id(tile_id)])
@@ -291,6 +315,7 @@ func _process(_delta: float) -> void:
 			texture_overlay_back.visible = true
 			texture_overlay_front.visible = true
 			color_overlay.visible = true
+			cancel_placing_button.visible = true
 			state = State.PLACING_TILE
 
 	if state == State.GOBLIN_CARD:
@@ -334,9 +359,6 @@ func _process(_delta: float) -> void:
 			color_overlay.color = Color("ff00007f")
 		texture_overlay_front.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
 		color_overlay.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
-
-	if state == State.SWITCH_TILE_CARD:
-		pass
 
 
 func update_stats() -> void:
@@ -456,6 +478,12 @@ func _on_button_pressed(value: String) -> void:
 		color_overlay.visible = false
 		GM.players_pawns[player_playing].modulate = Color("ffffff")
 		state = State.NEXT_PLAYER
+	elif value == "cancel_placing":
+		cancel_placing_button.visible = false
+		texture_overlay_back.visible = false
+		texture_overlay_front.visible = false
+		color_overlay.visible = false
+		state = State.CHOOSING_TILE
 	else:
 		button_value = value
 		button_pressed.emit()

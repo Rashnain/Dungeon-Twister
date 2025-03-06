@@ -217,6 +217,15 @@ offset_right = -524.0
 offset_bottom = 296.0
 text = " Stop placing "
 
+[node name="CancelPlacingButton" type="Button" parent="Camera2D"]
+unique_name_in_owner = true
+visible = false
+offset_left = -519.0
+offset_top = 265.0
+offset_right = -392.0
+offset_bottom = 296.0
+text = " Cancel placing "
+
 [node name="BackButton" type="Button" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = 582.0
@@ -266,4 +275,5 @@ text = "XX tiles"
 [connection signal="pressed" from="Camera2D/CardButton" to="." method="_on_button_pressed" binds= ["card"]]
 [connection signal="pressed" from="Camera2D/EndTurnButton" to="." method="_on_button_pressed" binds= ["end_turn"]]
 [connection signal="pressed" from="Camera2D/StopPlacingButton" to="." method="_on_button_pressed" binds= ["stop_placing"]]
+[connection signal="pressed" from="Camera2D/CancelPlacingButton" to="." method="_on_button_pressed" binds= ["cancel_placing"]]
 [connection signal="pressed" from="Camera2D/BackButton" to="." method="_on_back_button_pressed"]
