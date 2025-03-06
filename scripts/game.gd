@@ -60,6 +60,10 @@ func _process(_delta: float) -> void:
 		if instructions.text != "":
 			instructions.text += "\n\n"
 		if player_playing == 0:
+			if len(GM.tile_stack) == 0:
+				instructions.text += "----- End of game -----"
+				state = State.DICE
+				return
 			turn += 1
 			instructions.text += "----- Turn %d -----\n\n" % turn
 		if GM.players_skip_next_turn[player_playing]:
