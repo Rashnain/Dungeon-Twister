@@ -29,6 +29,7 @@ signal button_pressed
 @onready var cancel_placing_button: Button = %CancelPlacingButton
 @onready var tile_stack_label: Label = %TileStack/Label
 @onready var card_stack_label: Label = %CardStack/Label
+@onready var overlay: Control = %Overlay
 
 var button_value
 var player_playing := -1
@@ -365,6 +366,17 @@ func _process(_delta: float) -> void:
 		color_overlay.position = dungeon_back.map_to_local(mouse_tile) - Vector2(50, 50)
 
 
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed:
+		if Input.is_action_just_pressed("ui_cancel"):
+			get_viewport().set_input_as_handled()
+			overlay.visible = true
+			overlay.label.text = "Game paused\n"
+			overlay.continue_button.visible = true
+			overlay.back_button.visible = true
+			get_tree().paused = true
+
+
 func update_stats() -> void:
 	var players_str = ""
 	for i in GM.nr_players:
@@ -491,7 +503,3 @@ func _on_button_pressed(value: String) -> void:
 	else:
 		button_value = value
 		button_pressed.emit()
-
-
-func _on_back_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/title.tscn")

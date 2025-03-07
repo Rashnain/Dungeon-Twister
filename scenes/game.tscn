@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://c43pfmnt1csbv"]
+[gd_scene load_steps=31 format=3 uid="uid://c43pfmnt1csbv"]
 
 [ext_resource type="Script" uid="uid://sequ51j074rs" path="res://scripts/game.gd" id="1_ldrhe"]
 [ext_resource type="Texture2D" uid="uid://b1uajpwrx8hk6" path="res://assets/tiles/empty_corridor.png" id="3_dcqtx"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" uid="uid://b6q88hglkkqvu" path="res://scripts/camera.gd" id="13_2b3bx"]
 [ext_resource type="Texture2D" uid="uid://b8n2tthybm8k1" path="res://assets/cards/stack.png" id="13_tarp1"]
 [ext_resource type="Texture2D" uid="uid://cujtgay0sq7br" path="res://assets/tiles/stack.png" id="14_34bmf"]
+[ext_resource type="PackedScene" uid="uid://blqrfosg8okty" path="res://scenes/overlay.tscn" id="16_ca42v"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0r761"]
 texture = ExtResource("5_gdwn0")
@@ -226,14 +227,6 @@ offset_right = -392.0
 offset_bottom = 296.0
 text = " Cancel placing "
 
-[node name="BackButton" type="Button" parent="Camera2D"]
-unique_name_in_owner = true
-offset_left = 582.0
-offset_top = 324.0
-offset_right = 636.0
-offset_bottom = 355.0
-text = " Back "
-
 [node name="CardStack" type="TextureRect" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = 284.0
@@ -270,10 +263,17 @@ offset_right = 148.0
 offset_bottom = 220.0
 text = "XX tiles"
 
+[node name="Overlay" parent="Camera2D" instance=ExtResource("16_ca42v")]
+unique_name_in_owner = true
+visible = false
+offset_left = -640.0
+offset_top = -360.0
+offset_right = -640.0
+offset_bottom = -360.0
+
 [connection signal="pressed" from="Camera2D/ActionButton" to="." method="_on_button_pressed" binds= ["d6"]]
 [connection signal="pressed" from="Camera2D/MoveButton" to="." method="_on_button_pressed" binds= ["d4"]]
 [connection signal="pressed" from="Camera2D/CardButton" to="." method="_on_button_pressed" binds= ["card"]]
 [connection signal="pressed" from="Camera2D/EndTurnButton" to="." method="_on_button_pressed" binds= ["end_turn"]]
 [connection signal="pressed" from="Camera2D/StopPlacingButton" to="." method="_on_button_pressed" binds= ["stop_placing"]]
 [connection signal="pressed" from="Camera2D/CancelPlacingButton" to="." method="_on_button_pressed" binds= ["cancel_placing"]]
-[connection signal="pressed" from="Camera2D/BackButton" to="." method="_on_back_button_pressed"]
