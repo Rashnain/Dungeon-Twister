@@ -370,10 +370,10 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed:
 		if Input.is_action_just_pressed("ui_cancel"):
 			get_viewport().set_input_as_handled()
-			overlay.visible = true
-			overlay.label.text = "Game paused\n"
+			overlay.message.text = "Game paused\n "
 			overlay.continue_button.visible = true
 			overlay.back_button.visible = true
+			overlay.visible = true
 			get_tree().paused = true
 
 
@@ -390,6 +390,11 @@ func update_stats() -> void:
 
 
 func generate_treasure() -> void:
+	var tongue_twister := GM.pick_random_tongue_twister()
+	overlay.message.text = "Repeat this :\n[b]%s[/b]\n " % tongue_twister
+	overlay.continue_button.visible = true
+	overlay.visible = true
+	get_tree().paused = true
 	var coins: int
 	var cards: int
 	var multiplier := 1

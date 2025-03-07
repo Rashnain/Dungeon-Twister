@@ -15,6 +15,13 @@ var players_has_treasure_boost: Array[bool]
 var tile_stack: Array[int]
 var card_stack: Array[int]
 
+var tongue_twisters: Array
+
+
+func _ready() -> void:
+	var json_file: JSON = load("res://assets/tongue_twisters.json")
+	tongue_twisters = json_file.data["list"]
+
 
 func init_game() -> void:
 	# Players stats
@@ -85,3 +92,7 @@ func draw(player_index: int, type: Stack, amount: int) -> int:
 			player_hand.append(stack.pop_back())
 
 	return len(player_hand) - len_before
+
+
+func pick_random_tongue_twister() -> String:
+	return tongue_twisters[randi() % len(tongue_twisters)]
