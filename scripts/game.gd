@@ -62,8 +62,20 @@ func _process(_delta: float) -> void:
 			instructions.text += "\n\n"
 		if player_playing == 0:
 			if len(GM.tile_stack) == 0:
-				instructions.text += "----- End of game -----"
-				state = State.DICE
+				overlay.message.text = "End of game\n\n"
+				var already_listed := []
+				for number in len(GM.players_money):
+					var best_player := -1
+					var best_score := -1
+					for j in len(GM.players_money):
+						if j not in already_listed and GM.players_money[j] > best_score:
+							best_player = j
+							best_score = GM.players_money[j]
+					already_listed.append(best_player)
+					overlay.message.text += "%d - Player %d with %d coin(s)\n " % [number+1, best_player+1, best_score]
+				overlay.back_button.visible = true
+				overlay.visible = true
+				get_tree().paused = true
 				return
 			turn += 1
 			instructions.text += "----- Turn %d -----\n\n" % turn
@@ -391,7 +403,7 @@ func update_stats() -> void:
 
 func generate_treasure() -> void:
 	var tongue_twister := GM.pick_random_tongue_twister()
-	overlay.message.text = "Repeat this :\n[b]%s[/b]\n " % tongue_twister
+	overlay.message.text = "Repeat this :\n\n[b]%s[/b]\n " % tongue_twister
 	overlay.continue_button.visible = true
 	overlay.visible = true
 	get_tree().paused = true
