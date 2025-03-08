@@ -235,7 +235,7 @@ func _process(_delta: float) -> void:
 					270:
 						dungeon_back.set_cell(tile_mouse, tile_id % 5, Vector2i(0, 0), TileRotation.ROTATE_270)
 				dungeon_front.set_cell(tile_mouse, 0, Vector2i(0, 0))
-				custom_cell_data[tile_mouse] = tile_id / 5
+				custom_cell_data[tile_mouse] = tile_id / 5.0
 				GM.players[player_playing].tiles.remove_at(int(button_value))
 				GM.update_stats()
 				if card_id == 9:

@@ -18,7 +18,7 @@ func _ready() -> void:
 func init_game() -> void:
 	# Players
 	players.clear()
-	var x: int = -(200*nr_players + 10*(nr_players-1)) / 2
+	var x: int = int(-(200*nr_players + 10*(nr_players-1)) / 2.0)
 	for i in nr_players:
 		var new_player: Player = preload("res://scenes/player.tscn").instantiate()
 		var pawn := Sprite2D.new()
