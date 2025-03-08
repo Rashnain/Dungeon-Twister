@@ -402,6 +402,7 @@ func update_stats() -> void:
 
 
 func generate_treasure() -> void:
+	camera.pressed = false
 	var tongue_twister := GM.pick_random_tongue_twister()
 	overlay.message.text = "Repeat this :\n\n[b]%s[/b]\n " % tongue_twister
 	overlay.continue_button.visible = true
