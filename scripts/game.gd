@@ -19,7 +19,7 @@ signal button_pressed
 @onready var texture_overlay_back: TextureRect = %TextureOverlayBack
 @onready var texture_overlay_front: TextureRect = %TextureOverlayFront
 @onready var camera: Camera2D = $Camera2D
-@onready var instructions: RichTextLabel = %Instructions
+@onready var history: RichTextLabel = %History
 @onready var d4_button: Button = %MoveButton
 @onready var d6_button: Button = %ActionButton
 @onready var card_button: Button = %CardButton
@@ -40,7 +40,7 @@ var custom_cell_data := {}
 
 
 func _ready() -> void:
-	instructions.text = ""
+	history.text = ""
 	GM.init_game()
 	tile_stack_label.text = "%s tiles" % len(GM.tile_stack)
 	card_stack_label.text = "%s cards" % len(GM.card_stack)
@@ -59,8 +59,8 @@ func _process(_delta: float) -> void:
 		GM.players[player_playing].pawn.modulate = Color("ffffff")
 		GM.players[player_playing].background.color = Color("646464e0")
 		player_playing = (player_playing + 1) % GM.nr_players
-		if instructions.text != "":
-			instructions.text += "\n\n"
+		if history.text != "":
+			history.text += "\n\n"
 		if player_playing == 0:
 			if len(GM.tile_stack) == 0:
 				overlay.message.text = "End of game\n\n"
@@ -79,12 +79,12 @@ func _process(_delta: float) -> void:
 				get_tree().paused = true
 				return
 			turn += 1
-			instructions.text += "----- Turn %d -----\n\n" % turn
+			history.text += "----- Turn %d -----\n\n" % turn
 		if GM.players[player_playing].skip_next_turn:
-			instructions.text += "Player %d turn is skiped." % [player_playing+1]
+			history.text += "Player %d turn is skiped." % [player_playing+1]
 			GM.players[player_playing].skip_next_turn = false
 		else:
-			instructions.text += "It is Player %d turn :" % [player_playing+1]
+			history.text += "It is Player %d turn :" % [player_playing+1]
 			GM.players[player_playing].pawn.modulate = Color("ff0000")
 			#GM.players[player_playing].background.color = Color("9a9a9ae0")
 			GM.players[player_playing].background.color = Color("7f7f7fe0")
@@ -115,9 +115,9 @@ func _process(_delta: float) -> void:
 					type = GM.Stack.TILE
 					amount = 1
 			if type == GM.Stack.TILE:
-				instructions.text += "\n - They rolled a %d and got %d tile(s)" % [die_value, GM.draw(player_playing, type, amount)]
+				history.text += "\n - They rolled a %d and got %d tile(s)" % [die_value, GM.draw(player_playing, type, amount)]
 			else:
-				instructions.text += "\n - They rolled a %d and got %d card(s)" % [die_value, GM.draw(player_playing, type, amount)]
+				history.text += "\n - They rolled a %d and got %d card(s)" % [die_value, GM.draw(player_playing, type, amount)]
 			GM.update_stats()
 			if len(GM.tile_stack) > 1:
 				tile_stack_label.text = "%d tiles" % len(GM.tile_stack)
@@ -136,7 +136,7 @@ func _process(_delta: float) -> void:
 			card_button.visible = false
 			if str(button_value) == "d4":
 				max_movement = randi_range(1, 4)
-				instructions.text += "\n - They rolled a %d and got %d move(s)" % [max_movement, max_movement]
+				history.text += "\n - They rolled a %d and got %d move(s)" % [max_movement, max_movement]
 				if len(GM.players[player_playing].tiles) > 0:
 					state = State.CHOOSING_TILE
 				else:
@@ -181,32 +181,32 @@ func _process(_delta: float) -> void:
 							var pos := pawn.position
 							pawn.position = GM.players[player_playing].pawn.position
 							GM.players[player_playing].pawn.position = pos
-							instructions.text += "\n - They exchange position with Player %d" % [i+1]
+							history.text += "\n - They exchange position with Player %d" % [i+1]
 							reveal_tile(player_playing)
 							reveal_tile(i)
 						1:
 							GM.players[i].skip_next_turn = true
-							instructions.text += "\n - They skipped Player %d's next turn" % [i+1]
+							history.text += "\n - They skipped Player %d's next turn" % [i+1]
 						2:
 							var money: int = min(GM.players[i].money, 3)
 							GM.players[i].money -= money
 							GM.players[player_playing].money += money
-							instructions.text += "\n - They have stolen %d coin(s) from Player %d" % [money, i+1]
+							history.text += "\n - They have stolen %d coin(s) from Player %d" % [money, i+1]
 						3:
 							var valid_pos: Array[Vector2i] = []
 							for pos in dungeon_back.get_surrounding_cells(tile_mouse):
 								if Tile.is_connectable_pos(pos, tile_mouse, dungeon_back):
 									valid_pos.append(pos)
 							pawn.position = dungeon_back.map_to_local(valid_pos[randi_range(0, len(valid_pos)-1)])
-							instructions.text += "\n - They pushed Player %d !" % [i+1]
+							history.text += "\n - They pushed Player %d !" % [i+1]
 							reveal_tile(i)
 						4:
 							if GM.players[i].cards.is_empty():
-								instructions.text += "\n - They tried to steal Player %d but they don't have any card..." % [i+1]
+								history.text += "\n - They tried to steal Player %d but they don't have any card..." % [i+1]
 							else:
 								var index := randi_range(1, len(GM.players[i].cards))
 								GM.players[player_playing].cards.append(GM.players[i].cards.pop_at(index-1))
-								instructions.text += "\n - They stole a card from Player %d" % [i+1]
+								history.text += "\n - They stole a card from Player %d" % [i+1]
 								GM.update_stats()
 					color_overlay.visible = false
 					state = State.NEXT_PLAYER
@@ -281,11 +281,11 @@ func _process(_delta: float) -> void:
 				state = State.CHOOSING_PLAYER
 			5:
 				GM.players[player_playing].can_cancel_traps = true
-				instructions.text += "\n - They activate a trap canceller"
+				history.text += "\n - They activate a trap canceller"
 				state = State.NEXT_PLAYER
 			6:
 				GM.players[player_playing].has_treasure_boost = true
-				instructions.text += "\n - They activate a treasure booster"
+				history.text += "\n - They activate a treasure booster"
 				state = State.NEXT_PLAYER
 			7:
 				texture_overlay_front.texture = null
@@ -301,9 +301,9 @@ func _process(_delta: float) -> void:
 			9:
 				if len(GM.players[player_playing].tiles) > 0:
 					state = State.CHOOSING_TILE
-					instructions.text += "\n - They used a switch tile card"
+					history.text += "\n - They used a switch tile card"
 				else:
-					instructions.text += "\n - They used a switch tile card but they don't have any tile to switch with."
+					history.text += "\n - They used a switch tile card but they don't have any tile to switch with."
 					state = State.NEXT_PLAYER
 		GM.players[player_playing].cards.remove_at(int(button_value))
 		Card.remove_buttons()
@@ -322,7 +322,7 @@ func _process(_delta: float) -> void:
 			color_overlay.visible = false
 			if card_id == 9:
 				card_id = -1
-				instructions.text += " that they cancelled."
+				history.text += " that they cancelled."
 				state = State.NEXT_PLAYER
 			else:
 				state = State.MOVEMENT
@@ -343,7 +343,7 @@ func _process(_delta: float) -> void:
 			color_overlay.color = Color("00ff007f")
 			if Input.is_action_just_pressed("left_click"):
 				dungeon_front.set_cell(mouse_tile, 4, Vector2i(0, 0))
-				instructions.text += "\n - They spawned a goblin in the dungeon !"
+				history.text += "\n - They spawned a goblin in the dungeon !"
 				if GM.players[player_playing].pawn.position == dungeon_front.map_to_local(mouse_tile):
 					reveal_tile(player_playing)
 				for i in len(GM.players):
@@ -366,7 +366,7 @@ func _process(_delta: float) -> void:
 				var front_tile_id: int = custom_cell_data[mouse_tile]
 				if front_tile_id != 0:
 					texture_overlay_front.texture = load("res://assets/tiles/%s.png" % Tile.get_foreground_from_id(front_tile_id*5))
-				instructions.text += "\n - They used their insight card to see what others can't"
+				history.text += "\n - They used their insight card to see what others can't"
 				dungeon_front.set_cell(mouse_tile)
 				state = State.DICE
 				await get_tree().create_timer(1.0).timeout
@@ -402,7 +402,7 @@ func generate_treasure() -> void:
 	var cards: int
 	var multiplier := 1
 	if GM.players[player_playing].has_treasure_boost:
-		instructions.text += "\n - They use their treasure boost !"
+		history.text += "\n - They use their treasure boost !"
 		multiplier = 2
 		GM.players[player_playing].has_treasure_boost = false
 	match randi_range(1, 6):
@@ -426,7 +426,7 @@ func generate_treasure() -> void:
 			cards = 2
 	GM.players[player_playing].money += coins * multiplier
 	GM.draw(player_playing, GM.Stack.CARD, cards * multiplier)
-	instructions.text += "\n - Treasure : %d coin(s) %d card(s)" % [coins*multiplier, cards*multiplier]
+	history.text += "\n - Treasure : %d coin(s) %d card(s)" % [coins*multiplier, cards*multiplier]
 	GM.update_stats()
 
 
@@ -445,7 +445,7 @@ func reveal_tile(player_index: int) -> void:
 	var id := dungeon_front.get_cell_source_id(pawn_pos)
 	if id < 1 or id == 5: return
 	if GM.players[player_index].can_cancel_traps:
-		instructions.text += "\n - Their trap canceller prevent the trap !"
+		history.text += "\n - Their trap canceller prevent the trap !"
 		GM.players[player_index].can_cancel_traps = false
 		return
 	match id:
@@ -453,40 +453,40 @@ func reveal_tile(player_index: int) -> void:
 			if len(GM.players[player_index].tiles):
 				GM.players[player_index].tiles.pop_at(randi_range(0, len(GM.players[player_index].tiles)-1))
 				if player_index == player_playing:
-					instructions.text += "\n - One of their tiles were taken by a demon !"
+					history.text += "\n - One of their tiles were taken by a demon !"
 				else:
-					instructions.text += "\n - One of Player %d tiles were taken by a demon !" % [player_index+1]
+					history.text += "\n - One of Player %d tiles were taken by a demon !" % [player_index+1]
 			else:
 				if player_index == player_playing:
-					instructions.text += "\n - They accountered a demon but nothing happened"
+					history.text += "\n - They accountered a demon but nothing happened"
 				else:
-					instructions.text += "\n - Player %d accountered a demon but nothing happened" % [player_index+1]
+					history.text += "\n - Player %d accountered a demon but nothing happened" % [player_index+1]
 		2:
 			if len(GM.players[player_index].cards):
 				GM.players[player_index].cards.pop_at(randi_range(0, len(GM.players[player_index].cards)-1))
 				if player_index == player_playing:
-					instructions.text += "\n - They got trapped in spikes and lost a card !"
+					history.text += "\n - They got trapped in spikes and lost a card !"
 				else:
-					instructions.text += "\n - Player %d got trapped in spikes and lost a card !" % [player_index+1]
+					history.text += "\n - Player %d got trapped in spikes and lost a card !" % [player_index+1]
 			else:
 				if player_index == player_playing:
-					instructions.text += "\n - They got trapped in spikes but nothing happened"
+					history.text += "\n - They got trapped in spikes but nothing happened"
 				else:
-					instructions.text += "\n - Player %d got trapped in spikes but nothing happened" % [player_index+1]
+					history.text += "\n - Player %d got trapped in spikes but nothing happened" % [player_index+1]
 		3:
 			GM.players[player_index].skip_next_turn = true
 			if player_index == player_playing:
-				instructions.text += "\n - They got lost in a infinte tunnel !"
+				history.text += "\n - They got lost in a infinte tunnel !"
 			else:
-					instructions.text += "\n - Player %d got lost in a infinte tunnel !" % [player_index+1]
+					history.text += "\n - Player %d got lost in a infinte tunnel !" % [player_index+1]
 		4:
 			var money = min(GM.players[player_index].money, 2)
 			if GM.players[player_index].money:
 				GM.players[player_index].money -= money
 			if player_index == player_playing:
-				instructions.text += "\n - A goblin robbed them %d coins !" % money
+				history.text += "\n - A goblin robbed them %d coins !" % money
 			else:
-					instructions.text += "\n - A goblin robbed %d coins from Player %d !" % [money, player_index+1]
+				history.text += "\n - A goblin robbed %d coins from Player %d !" % [money, player_index+1]
 	if player_index == player_playing:
 		state = State.NEXT_PLAYER
 		end_turn_button.visible = false

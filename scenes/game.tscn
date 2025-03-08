@@ -140,7 +140,7 @@ z_index = 1
 position = Vector2(700, 350)
 script = ExtResource("13_2b3bx")
 
-[node name="Instructions" type="RichTextLabel" parent="Camera2D"]
+[node name="History" type="RichTextLabel" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = -635.0
 offset_top = -185.0
