@@ -92,12 +92,12 @@ sources/4 = SubResource("TileSetAtlasSource_icg7i")
 sources/5 = SubResource("TileSetAtlasSource_v5a0t")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ir15t"]
-bg_color = Color(0.196078, 0.196078, 0.196078, 0.501961)
+bg_color = Color(0.196078, 0.196078, 0.196078, 0.752941)
 border_width_left = 5
 border_width_top = 3
 border_width_right = 5
 border_width_bottom = 3
-border_color = Color(0.247059, 0.247059, 0.247059, 1)
+border_color = Color(0.196078, 0.196078, 0.196078, 0.752941)
 border_blend = true
 corner_radius_top_left = 8
 corner_radius_top_right = 8
