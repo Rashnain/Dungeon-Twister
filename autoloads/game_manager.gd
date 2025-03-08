@@ -3,19 +3,11 @@ extends Node
 
 enum Stack { CARD, TILE }
 
+var tongue_twisters: Array
 var nr_players: int
-var players_money: Array[int]
-var players_pawns: Array[Sprite2D]
-var players_cards: Array[Array]
-var players_tiles: Array[Array]
-var players_can_cancel_traps: Array[bool]
-var players_skip_next_turn: Array[bool]
-var players_has_treasure_boost: Array[bool]
-
+var players: Array[Player]
 var tile_stack: Array[int]
 var card_stack: Array[int]
-
-var tongue_twisters: Array
 
 
 func _ready() -> void:
@@ -24,24 +16,18 @@ func _ready() -> void:
 
 
 func init_game() -> void:
-	# Players stats
-	players_money.clear()
-	players_pawns.clear()
-	players_cards.clear()
-	players_tiles.clear()
-	players_can_cancel_traps.clear()
-	players_skip_next_turn.clear()
-	players_has_treasure_boost.clear()
+	# Players
+	players.clear()
+	var x: int = -(200*nr_players + 10*(nr_players-1)) / 2
 	for i in nr_players:
-		players_money.append(0)
+		var new_player: Player = preload("res://scenes/player.tscn").instantiate()
 		var pawn := Sprite2D.new()
 		pawn.texture = load("res://assets/pawns/%s.png" % Pawn.get_name_from_id(i))
-		players_pawns.append(pawn)
-		players_cards.append([])
-		players_tiles.append([])
-		players_can_cancel_traps.append(false)
-		players_skip_next_turn.append(false)
-		players_has_treasure_boost.append(false)
+		new_player.pawn = pawn
+		new_player.position = Vector2i(x, -355)
+		new_player.player_name = "Player %d" % [i+1]
+		players.append(new_player)
+		x += 200 + 10
 
 	# Cards
 	card_stack.clear()
@@ -80,10 +66,10 @@ func draw(player_index: int, type: Stack, amount: int) -> int:
 
 	if type == Stack.TILE:
 		stack = tile_stack
-		player_hand = players_tiles[player_index]
+		player_hand = players[player_index].tiles
 	elif type == Stack.CARD:
 		stack = card_stack
-		player_hand = players_cards[player_index]
+		player_hand = players[player_index].cards
 
 	var len_before := len(player_hand)
 
@@ -92,6 +78,11 @@ func draw(player_index: int, type: Stack, amount: int) -> int:
 			player_hand.append(stack.pop_back())
 
 	return len(player_hand) - len_before
+
+
+func update_stats() -> void:
+	for player in players:
+		player.update()
 
 
 func pick_random_tongue_twister() -> String:

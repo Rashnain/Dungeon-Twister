@@ -140,19 +140,6 @@ z_index = 1
 position = Vector2(700, 350)
 script = ExtResource("13_2b3bx")
 
-[node name="Stats" type="Label" parent="Camera2D"]
-unique_name_in_owner = true
-offset_left = -635.0
-offset_top = -355.0
-offset_right = -506.0
-offset_bottom = -202.0
-text = "Player 1 : X coins
-Player 2 : X coins
-Player 3 : X coins
-Player 4 : X coins
-Player 5 : X coins
-Player 6 : X coins"
-
 [node name="Instructions" type="RichTextLabel" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = -635.0
@@ -230,9 +217,9 @@ text = " Cancel placing "
 [node name="CardStack" type="TextureRect" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = 284.0
-offset_top = -348.0
+offset_top = 125.0
 offset_right = 498.0
-offset_bottom = -134.0
+offset_bottom = 339.0
 mouse_filter = 2
 texture = ExtResource("13_tarp1")
 expand_mode = 2
@@ -249,9 +236,9 @@ text = "XX cards"
 [node name="TileStack" type="TextureRect" parent="Camera2D"]
 unique_name_in_owner = true
 offset_left = 400.0
-offset_top = -360.0
+offset_top = 113.0
 offset_right = 640.0
-offset_bottom = -118.0
+offset_bottom = 355.0
 mouse_filter = 2
 texture = ExtResource("14_34bmf")
 
@@ -266,6 +253,7 @@ text = "XX tiles"
 [node name="Overlay" parent="Camera2D" instance=ExtResource("16_ca42v")]
 unique_name_in_owner = true
 visible = false
+z_index = 1
 offset_left = -640.0
 offset_top = -360.0
 offset_right = -640.0
