@@ -7,6 +7,7 @@ static var container: CenterContainer
 static func create_buttons(id: int, game: Node2D) -> void:
 	container = game.get_node("%CardContainer")
 	container.position.y = 125
+	container.size.y = 185
 	var hbox := container.get_node("HBoxContainer")
 	for i in len(GM.players[id].cards):
 		var card_id = GM.players[id].cards[i]

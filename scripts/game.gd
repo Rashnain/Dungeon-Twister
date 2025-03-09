@@ -192,6 +192,7 @@ func _process(_delta: float) -> void:
 							GM.players[i].money -= money
 							GM.players[player_playing].money += money
 							history.text += "\n - They have stolen %d coin(s) from Player %d" % [money, i+1]
+							GM.update_stats()
 						3:
 							var valid_pos: Array[Vector2i] = []
 							for pos in dungeon_back.get_surrounding_cells(tile_mouse):

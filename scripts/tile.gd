@@ -64,7 +64,8 @@ static func create_from_id(id: int) -> Tile:
 
 static func create_buttons(id: int, game: Node2D) -> void:
 	container = game.get_node("%CardContainer")
-	container.position.y = 195
+	container.position.y = 200
+	container.size.y = 110
 	var hbox := container.get_node("HBoxContainer")
 	for i in len(GM.players[id].tiles):
 		var tile_id = GM.players[id].tiles[i]
