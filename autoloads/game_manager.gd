@@ -50,7 +50,7 @@ func init_game() -> void:
 	for i in 7:
 		tile_stack.append(4) # Three ways
 	# Traps
-	for i in range(5, 22):
+	for i in range(5, 25):
 		# 5-9 : demon | 10-14 : spikes | 15-19 : tunnel | 20-24 : goblin
 		tile_stack.append(i)
 	# Treasures

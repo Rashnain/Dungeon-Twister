@@ -306,6 +306,7 @@ func _process(_delta: float) -> void:
 				else:
 					history.text += "\n - They used a switch tile card but they don't have any tile to switch with."
 					state = State.NEXT_PLAYER
+					card_id = -1
 		GM.players[player_playing].cards.remove_at(int(button_value))
 		Card.remove_buttons()
 		GM.update_stats()
