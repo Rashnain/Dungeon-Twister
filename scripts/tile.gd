@@ -10,7 +10,7 @@ enum TileRotation {
 
 enum Side { TOP, RIGHT, BOTTOM, LEFT }
 
-static var node2d: Node2D
+static var container: CenterContainer
 
 var top: bool
 var right: bool
@@ -62,11 +62,10 @@ static func create_from_id(id: int) -> Tile:
 	return tile
 
 
-static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void:
-	node2d = Node2D.new()
-	node2d.position = Vector2(-635, 135)
-	camera.add_child(node2d)
-	var x := 0
+static func create_buttons(id: int, game: Node2D) -> void:
+	container = game.get_node("%CardContainer")
+	container.position.y = 195
+	var hbox := container.get_node("HBoxContainer")
 	for i in len(GM.players[id].tiles):
 		var tile_id = GM.players[id].tiles[i]
 		var tile = TextureButton.new()
@@ -74,14 +73,17 @@ static func create_buttons(id: int, camera: Camera2D, game: Node2D) -> void:
 			tile.texture_normal = load("res://assets/tiles/%s.png" % [get_background_from_id(tile_id)])
 		else:
 			tile.texture_normal = TextureOverlapper.overlap_str("tiles/%s" % [get_background_from_id(tile_id)], "tiles/%s" % [get_foreground_from_id(tile_id)])
-		tile.position = Vector2(x, 0)
-		node2d.add_child(tile)
-		x += 105
+		hbox.add_child(tile)
 		tile.pressed.connect(game._on_button_pressed.bind("%d" % i))
+	var nr := len(GM.players[id].tiles)
+	container.get_node("ColorRect").custom_minimum_size = Vector2(nr*100+(nr+1)*5, 110)
+	container.get_node("ColorRect").visible = true
 
 
 static func remove_buttons() -> void:
-	node2d.queue_free()
+	container.get_node("ColorRect").visible = false
+	for node in container.get_node("HBoxContainer").get_children():
+		node.queue_free()
 
 
 static func get_foreground_from_id(id: int) -> String:

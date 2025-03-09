@@ -273,7 +273,7 @@ func _process(_delta: float) -> void:
 		color_overlay.position = dungeon_back.map_to_local(tile_mouse) - Vector2(50, 50)
 
 	if state == State.CHOOSING_CARD:
-		Card.create_buttons(player_playing, camera, self)
+		Card.create_buttons(player_playing, self)
 		await button_pressed
 		card_id = GM.players[player_playing].cards[int(button_value)]
 		match card_id:
@@ -310,7 +310,7 @@ func _process(_delta: float) -> void:
 		GM.update_stats()
 
 	if state == State.CHOOSING_TILE:
-		Tile.create_buttons(player_playing, camera, self)
+		Tile.create_buttons(player_playing, self)
 		stop_placing_button.visible = true
 		state = State.DICE
 		await button_pressed
@@ -383,6 +383,8 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed:
 		if Input.is_action_just_pressed("ui_cancel"):
+			camera.pressed = false
+			Input.set_default_cursor_shape()
 			get_viewport().set_input_as_handled()
 			overlay.message.text = "Game paused\n "
 			overlay.continue_button.visible = true

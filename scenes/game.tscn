@@ -160,58 +160,66 @@ text = "...
 ..."
 scroll_following = true
 
-[node name="ActionButton" type="Button" parent="Camera2D"]
+[node name="CardContainer" type="CenterContainer" parent="Camera2D"]
+unique_name_in_owner = true
+offset_left = -640.0
+offset_top = 190.0
+offset_right = 640.0
+offset_bottom = 310.0
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/CardContainer"]
+visible = false
+layout_mode = 2
+color = Color(0.25098, 0.25098, 0.25098, 1)
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/CardContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ButtonContainer" type="CenterContainer" parent="Camera2D"]
+offset_left = -640.0
+offset_top = 315.0
+offset_right = 640.0
+offset_bottom = 355.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Camera2D/ButtonContainer"]
+layout_mode = 2
+theme_override_constants/separation = 5
+
+[node name="ActionButton" type="Button" parent="Camera2D/ButtonContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-offset_left = -635.0
-offset_top = 75.0
-offset_right = -506.0
-offset_bottom = 106.0
+layout_mode = 2
 text = " Roll Action Die "
 
-[node name="MoveButton" type="Button" parent="Camera2D"]
+[node name="MoveButton" type="Button" parent="Camera2D/ButtonContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-offset_left = -635.0
-offset_top = 75.0
-offset_right = -472.0
-offset_bottom = 106.0
+layout_mode = 2
 text = " Roll Movement Die "
 
-[node name="CardButton" type="Button" parent="Camera2D"]
+[node name="CardButton" type="Button" parent="Camera2D/ButtonContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-offset_left = -467.0
-offset_top = 75.0
-offset_right = -366.0
-offset_bottom = 106.0
+layout_mode = 2
 text = " Play a card "
 
-[node name="EndTurnButton" type="Button" parent="Camera2D"]
+[node name="EndTurnButton" type="Button" parent="Camera2D/ButtonContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-offset_left = -635.0
-offset_top = 301.0
-offset_right = -551.0
-offset_bottom = 332.0
+layout_mode = 2
 text = " End turn "
 
-[node name="StopPlacingButton" type="Button" parent="Camera2D"]
+[node name="StopPlacingButton" type="Button" parent="Camera2D/ButtonContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-offset_left = -635.0
-offset_top = 265.0
-offset_right = -524.0
-offset_bottom = 296.0
+layout_mode = 2
 text = " Stop placing "
 
-[node name="CancelPlacingButton" type="Button" parent="Camera2D"]
+[node name="CancelPlacingButton" type="Button" parent="Camera2D/ButtonContainer/HBoxContainer"]
 unique_name_in_owner = true
 visible = false
-offset_left = -519.0
-offset_top = 265.0
-offset_right = -392.0
-offset_bottom = 296.0
+layout_mode = 2
 text = " Cancel placing "
 
 [node name="CardStack" type="TextureRect" parent="Camera2D"]
@@ -261,9 +269,9 @@ offset_top = -360.0
 offset_right = -640.0
 offset_bottom = -360.0
 
-[connection signal="pressed" from="Camera2D/ActionButton" to="." method="_on_button_pressed" binds= ["d6"]]
-[connection signal="pressed" from="Camera2D/MoveButton" to="." method="_on_button_pressed" binds= ["d4"]]
-[connection signal="pressed" from="Camera2D/CardButton" to="." method="_on_button_pressed" binds= ["card"]]
-[connection signal="pressed" from="Camera2D/EndTurnButton" to="." method="_on_button_pressed" binds= ["end_turn"]]
-[connection signal="pressed" from="Camera2D/StopPlacingButton" to="." method="_on_button_pressed" binds= ["stop_placing"]]
-[connection signal="pressed" from="Camera2D/CancelPlacingButton" to="." method="_on_button_pressed" binds= ["cancel_placing"]]
+[connection signal="pressed" from="Camera2D/ButtonContainer/HBoxContainer/ActionButton" to="." method="_on_button_pressed" binds= ["d6"]]
+[connection signal="pressed" from="Camera2D/ButtonContainer/HBoxContainer/MoveButton" to="." method="_on_button_pressed" binds= ["d4"]]
+[connection signal="pressed" from="Camera2D/ButtonContainer/HBoxContainer/CardButton" to="." method="_on_button_pressed" binds= ["card"]]
+[connection signal="pressed" from="Camera2D/ButtonContainer/HBoxContainer/EndTurnButton" to="." method="_on_button_pressed" binds= ["end_turn"]]
+[connection signal="pressed" from="Camera2D/ButtonContainer/HBoxContainer/StopPlacingButton" to="." method="_on_button_pressed" binds= ["stop_placing"]]
+[connection signal="pressed" from="Camera2D/ButtonContainer/HBoxContainer/CancelPlacingButton" to="." method="_on_button_pressed" binds= ["cancel_placing"]]
