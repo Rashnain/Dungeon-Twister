@@ -12,7 +12,7 @@
 ### Screenshots
 
 Middle of a game
-![middle of a game](readme_assets/middle of a game.png)
+![middle of a game](readme_assets/middle%20of%20a%20game.png)
 
 End of a game
-![end of a game](readme_assets/end of a game.png)
+![end of a game](readme_assets/end%20of%20a%20game.png)
