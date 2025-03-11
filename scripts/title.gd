@@ -5,6 +5,8 @@ extends Node2D
 
 
 func _ready() -> void:
+	if OS.has_feature("web"):
+		$QuitButton.free()
 	if GM.nr_players:
 		player_chooser.value = GM.nr_players
 
