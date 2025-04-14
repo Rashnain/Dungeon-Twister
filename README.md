@@ -1,6 +1,11 @@
 # Dungeon Twister
   A little game made in english class and recreated in Godot
 
+---
+
+<a href="https://rashnain.itch.io/dungeon-twister">
+<img width="150" src="readme_assets/itch.io_badge-color.svg" alt="Available on itch.io">
+</a>
 
 ### Features
 * Dungeon
